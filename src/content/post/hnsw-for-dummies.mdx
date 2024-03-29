@@ -1,0 +1,118 @@
+---
+publishDate: 2024-03-10T00:13:00Z
+author: fastfist (Denzell F)
+title: HNSW for dummies
+excerpt: We tried to read about HNSW indexes. It was so much harder to understand what values changed what. Lets talk about how it actually works under the hood
+image: /public/embedding-space.webp
+category: Comparisons
+tags:
+  - trieve
+  - qdrant
+  - HNSW
+  - resources
+---
+
+# HNSW for dummies
+
+## Inspiration
+
+As vector search problems scale to the tune of millions and even billions of vectors, there comes a big question challenge that comes into question. How can we optimize our indexes for space and/or time. The question that [qdrant.tech](https://qdrant.tech), [vespa.ai](https://vespa.ai) and many other vector search engines tell you to do is to tune the HNSW index.
+
+These are the parameters we will talk about.
+
+| HNSW name | m                    | ef_construct					             | N/a         | 
+|-----------|----------------------|-----------------------------------|-------------|
+| Vespa		  | `max-links-per-node` | `neighbors-to-expolore-at-insert` | N/a         |
+| Qdrant    | `m`                  | `ef_construct`                    | `payload_m` | 
+
+⚠ ⚠ ⚠ **For the speedrunners. We start from the basics and expand out. Skip as needed**⚠ ⚠ ⚠
+
+## Roadmap
+- [Inspiration](#inspiration)
+- [Brute Forcing Search](#life-without-indexing)
+- [Single Layer HNSW (What does `m` do)](#single-layer-hnsw) 
+- [Full HNSW](#full-hnsw)
+- [What does `ef_construct` do](#index-building)
+- [Filterable HNSW](#filterable-hnsw)
+- [Closing out](#closing-out)
+- [Resources](#resources)
+
+
+## Life without indexing
+
+Ah yes, **Brute force** the easiest way to do search. For each vector in the database we compare cosine distance of each other. This is way too slow and O(N) complexity.
+
+## Single layer HNSW
+
+HNSW stores the data as a graph, where each point is a vector is connected to at most `m` other points. With this type of setup we can do a greedy search. Only traveling to the closest neighbor at each step of traversal to find the nearest neighbor. 
+
+This is it broken down a bit more
+
+1) Choose a point at random as the candidate point
+1) Follow all edges and evaluate which is closest to the query vector
+2) The closest edge becomes the new candidate point
+3) If no other edge is closer, stop. The Candidate point is the closest point
+
+
+![Animated graphic showing HNSW graph traversal](/public/HNSWSingle.gif)
+
+In this example the graph has the max number of edges per node or `m` set to 3. During search `m` becomes the number of edge candidates to look at. For our example we only have search m=two
+
+Notice how now we no longer need to visit all possible neighbors of the greedy path traversal. There is a potential issue that we can fall into local minima if the graph isn't fully connected. The HNSW paper talks more in depth about the heuristic used when graph building to increase total graph connectivity.
+
+## Full HNSW
+
+Full HNSW adds an extra level to this, quite literally. All nodes still exist on the base layer (layer 0). Each node is randomly sampled to be placed on a higher layer l_i which is a number between 0 and L. If a node is placed on layer l_i, that node is then placed in all layers below l_i to 0. If the randomness is set to be geometric, as the graph goes up, there should be less nodes at the top. This is beneficial, because local minima are a lot less likely to be found as the the top layer should have much higer jumps than bottom layers
+
+Now for a search we conduct the same Search as above, but once we find a closest node on a layer, we traverse down to the next layer until we reach layer 0. Once at layer 0 we have completed the full search.
+
+![Graphic showing layered HNSW graph](/public/hnsw-paper-graphic.png)
+
+
+## Index building
+
+Oh cool... wait, whats this `ef_construct` parameter used for? Well the vespa alternative name explains it much cleaner than the papers name. Its the nubmer of neighbors to expolore at insert. Lets talk a little bit about indexing.
+
+When we insert a new vector, at layer l_i. We evaluate `ef_construct` number of other nodes to find a neighbor, out of those we connect that node to at most `m` nodes as the edges. `ef_construct` only impacts the time to build, rebuild, and create the index.
+
+## Filterable HNSW
+
+Thats everything right? Well... we are using Qdrant. What the hell does `payload_m` do? 
+
+Now, this is where it gets complicated Qdrant re-implemented HNSW such that it can perform in-place filtering. Filtering is needed for most vector search engines. There are 3 methods for doing this.
+
+- Post-filtering: After the search happens, all results that do not match filter conditions are removed, continue searching until you reach number of points required. The issue is refiltering multiple times is not viable.
+- Pre-filtering: Generate a list of candidates that meet filter conditions, then do vector search across those candidates. This requires checking that all Points meet some conditions for search. At millions of Vectors, this becomes very expensive.
+- In-place filtering, As you traverse the graph, Determine if a neighbor node meets the conditions, then choose that node.
+
+Qdrant is doing In-place filtering. Here is a graph demonstrating that.
+
+![Filter HNSW graphic](/public/filter-hnsw.png)
+
+What this means is that during the Greedy search, whichever neighbor we choose that is closest also has to match the filter conditions.
+
+This arises an issue we can have where the graph becomes disconnected. Picture this.
+
+![Filter HNSW problems](/public/filter-hnsw-problems.png)
+
+Qdrant gets around this issue by building subgraphs based on indexed keys that exist in the payload. This is what `payload_m` determines.
+
+
+![Filter HNSW problems](/public/filter-hnsw-subgraph.png)
+
+## Closing out
+
+HNSW indexes are graph based search where `m` is the number of edges for each. The larger the `m` the more edges need to be searched and indexed. Increasing indexing time and search time.
+
+Qdrant adds a new parameter `payload_m` for subgraphs on based on the payload
+
+`ef_construct` is how many nodes to look at when attempting to determine its neighbors.
+
+**🦀Happy Hacking!🚀**
+
+## Resources
+
+- [Original Paper](https://arxiv.org/ftp/arxiv/papers/1603/1603.09320.pdf)
+- [Qdrant HNSW talk](https://www.youtube.com/watch?v=bU38Ovdh3NY)
+- [QDRANT Filtrable HNSW](https://qdrant.tech/articles/filtrable-hnsw/)
+- [Filterable HNSW implementation Blog by QDRANT CTO](https://blog.vasnetsov.com/posts/categorical-hnsw-part-2/)
