@@ -7,7 +7,7 @@ image: /embedding-space.webp
 category: Comparisons
 tags:
   - trieve
-  - qdrant
+  - QDRANT
   - HNSW
   - resources
 ---
@@ -16,9 +16,9 @@ tags:
 
 ## Inspiration
 
-As vector search problems scale to the tune of millions and even billions of vectors, there comes a big question challenge that comes into question. How can we optimize our indexes for space and/or time. The question that [qdrant.tech](https://qdrant.tech), [vespa.ai](https://vespa.ai) and many other vector search engines tell you to do is to tune the HNSW index.
+As vector search problems scale to the tune of millions and even billions of vectors, there comes a big challenge to consider. How can we optimize our indexes for space and/or time. Looking [qdrant.tech](https://qdrant.tech), [vespa.ai](https://vespa.ai) and many other vector search engines tell you to do is to tune the HNSW index, but what does that mean?
 
-These are the parameters we will talk about.
+These are the parameters to tune that we will talk about.
 
 | HNSW name | m                    | ef_construct					             | N/a         | 
 |-----------|----------------------|-----------------------------------|-------------|
@@ -42,7 +42,7 @@ These are the parameters we will talk about.
 
 Ah yes, **Brute force** the easiest way to do search. For each vector in the database we compare cosine distance of each other. This is way too slow and O(N) complexity.
 
-## Single layer HNSW
+## Single layer HNSW Searching
 
 HNSW stores the data as a graph, where each point is a vector is connected to at most `m` other points. With this type of setup we can do a greedy search. Only traveling to the closest neighbor at each step of traversal to find the nearest neighbor. 
 
@@ -60,7 +60,7 @@ In this example the graph has the max number of edges per node or `m` set to 3. 
 
 Notice how now we no longer need to visit all possible neighbors of the greedy path traversal. There is a potential issue that we can fall into local minima if the graph isn't fully connected. The HNSW paper talks more in depth about the heuristic used when graph building to increase total graph connectivity.
 
-## Full HNSW
+## Full HNSW Searching
 
 Full HNSW adds an extra level to this, quite literally. All nodes still exist on the base layer (layer 0). Each node is randomly sampled to be placed on a higher layer l_i which is a number between 0 and L. If a node is placed on layer l_i, that node is then placed in all layers below l_i to 0. If the randomness is set to be geometric, as the graph goes up, there should be less nodes at the top. This is beneficial, because local minima are a lot less likely to be found as the the top layer should have much higer jumps than bottom layers
 
@@ -71,7 +71,7 @@ Now for a search we conduct the same Search as above, but once we find a closest
 
 ## Index building
 
-Oh cool... wait, whats this `ef_construct` parameter used for? Well the vespa alternative name explains it much cleaner than the papers name. Its the nubmer of neighbors to expolore at insert. Lets talk a little bit about indexing.
+Oh cool... wait, whats this `ef_construct` parameter used for? Well the vespa alternative name explains it much cleaner than the papers name. Its the number of neighbors to explore at insert. Lets talk a little bit about indexing.
 
 When we insert a new vector, at layer l_i. We evaluate `ef_construct` number of other nodes to find a neighbor, out of those we connect that node to at most `m` nodes as the edges. `ef_construct` only impacts the time to build, rebuild, and create the index.
 
@@ -106,7 +106,9 @@ HNSW indexes are graph based search where `m` is the number of edges for each. T
 
 Qdrant adds a new parameter `payload_m` for subgraphs on based on the payload
 
-`ef_construct` is how many nodes to look at when attempting to determine its neighbors.
+`ef_construct` is how many nodes to look at when attempting to determine its neighbors. A higher value will improve the quality of the graph, but will also increase time to insert a new item into the index.
+
+We love to talk about search or any search problems feel free to shoot us an email some humans at humans@trieve.ai or just call me at 682-222-4090 for more informal stuff.
 
 **🦀Happy Hacking!🚀**
 
