@@ -3,7 +3,7 @@ publishDate: 2024-03-10T00:13:00Z
 author: fastfist (Denzell F)
 title: HNSW for dummies
 excerpt: We tried to read about HNSW indexes. It was so much harder to understand what values changed what. Lets talk about how it actually works under the hood
-image: /public/embedding-space.webp
+image: /embedding-space.webp
 category: Comparisons
 tags:
   - trieve
@@ -54,7 +54,7 @@ This is it broken down a bit more
 3) If no other edge is closer, stop. The Candidate point is the closest point
 
 
-![Animated graphic showing HNSW graph traversal](/public/HNSWSingle.gif)
+![Animated graphic showing HNSW graph traversal](/HNSWSingle.gif)
 
 In this example the graph has the max number of edges per node or `m` set to 3. During search `m` becomes the number of edge candidates to look at. For our example we only have search m=two
 
@@ -66,7 +66,7 @@ Full HNSW adds an extra level to this, quite literally. All nodes still exist on
 
 Now for a search we conduct the same Search as above, but once we find a closest node on a layer, we traverse down to the next layer until we reach layer 0. Once at layer 0 we have completed the full search.
 
-![Graphic showing layered HNSW graph](/public/hnsw-paper-graphic.png)
+![Graphic showing layered HNSW graph](/hnsw-paper-graphic.png)
 
 
 ## Index building
@@ -87,18 +87,18 @@ Now, this is where it gets complicated Qdrant re-implemented HNSW such that it c
 
 Qdrant is doing In-place filtering. Here is a graph demonstrating that.
 
-![Filter HNSW graphic](/public/filter-hnsw.png)
+![Filter HNSW graphic](/filter-hnsw.png)
 
 What this means is that during the Greedy search, whichever neighbor we choose that is closest also has to match the filter conditions.
 
 This arises an issue we can have where the graph becomes disconnected. Picture this.
 
-![Filter HNSW problems](/public/filter-hnsw-problems.png)
+![Filter HNSW problems](/filter-hnsw-problems.png)
 
 Qdrant gets around this issue by building subgraphs based on indexed keys that exist in the payload. This is what `payload_m` determines.
 
 
-![Filter HNSW problems](/public/filter-hnsw-subgraph.png)
+![Filter HNSW problems](/filter-hnsw-subgraph.png)
 
 ## Closing out
 
