@@ -1,0 +1,239 @@
+# Search Relevance Exploration: Pod Foods
+
+## Introduction
+
+Trieve focuses on helping our customers build great discovery experiences. [Pod Foods](https://podfoods.co/) is a wholesale grocery distribution company with a search platform for its B2B marketplace. Their current search is provided by Objective, Inc. 
+
+Here we showcase a simple setup in Trieve (we extracted metadata from all the product pages and setup our own search experience) within the [Nuxt](https://nuxt.com/) interface from Pod Foods.
+
+**Live demo:** [podfoods.trieve.ai](https://podfoods.trieve.ai) **GitHub repo:** [devflowinc/podfoods-discovery](https://github.com/devflowinc/podfoods-discovery)
+
+### short descriptive
+
+#### Texas boutique yerba tea
+
+The first tests we did were for the Austin-based Weird Beverages brand, which did not appear in the top results.
+
+<figure style="border: 1px solid #ccc;">
+  <a href="https://hackmd.io/_uploads/SJyp0rtqR.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/SJyp0rtqR.png" alt="podfoods-objective_Texas_boutique_tea_yerba_2024_08_13" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">Current results for <a href="https://podfoods.co/products?term=Texas%20boutique%20yerba%20tea">Texas boutique yerba tea</a></figcaption>
+</figure>
+
+<figure style="border: 1px solid rgb(217 70 239);">
+  <a href="https://hackmd.io/_uploads/BJy6RHtcC.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/BJy6RHtcC.png" alt="podfoods-trieve_Texas_boutique_tea_yerba_2024_08_13" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">
+        Trieve Results for <a href="https://podfoods.trieve.ai/?term=Texas%20boutique%20yerba%20tea">Texas boutique tea yerba</a></figcaption>
+</figure>
+
+### short descriptive
+
+#### grapefruit weird yerba
+
+The current search returns results at the product-level. So when you search [grapefruit weird yerba](https://podfoods.co/products?term=grapefruit%20weird%20yerba) the first result is labelled "WEIRD Iced Tea, Organic | 12 Pack By Weird Beverages". When you hover over the result, the images cycle through variants of the product. You have to click through to the product page to see the different variant names themselves. This can make it hard for a user to know if the product is what they are looking for or if the search results are relevant at all.
+
+<figure style="border: 1px solid #ccc;">
+  <a href="https://hackmd.io/_uploads/Sygu6Igeq0.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/Sygu6Igeq0.png" alt="podfoods-objective_grapefruit_weird_yerba_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">
+        Current results for <a href="https://podfoods.co/products?term=grapefruit%20weird%20yerba"> grapefruit weird yerba</a></figcaption>
+</figure>
+
+<figure style="border: 1px solid rgb(217 70 239);">
+  <a href="https://hackmd.io/_uploads/HJKW2Qx5R.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/HJKW2Qx5R.png" alt="podfoods-trieve_grapefruit_weird_yerba_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">
+        Trieve results for <a href="https://podfoods.trieve.ai/?term=grapefruit%20weird%20yerba">grapefruit weird yerba</a></figcaption>
+</figure>
+
+### in the wild
+
+#### toaster pastries
+
+We conducted these searches after seeing [a post on LinkedIn about toaster pastries from Pod's Chief Merchandising Officer](https://www.linkedin.com/posts/peter-gialantzis-a14a1b88_cpg-naturalfoods-garbage-activity-7221838546095992832-Gxd0?utm_source=share&utm_medium=member_desktop). While [toaster pastries] successfully returns the Ghetto Gastro pastries at the top, adding words like "natural", "healthy", "real fruit" to the search query shoves toaster pastries out of the top results. For each of these queries in Trieve the Ghetto Gastro pastries are at the top.
+
+<figure style="border: 1px solid #ccc;">
+  <a href="https://hackmd.io/_uploads/By_p8lxcR.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/By_p8lxcR.png" alt="podfoods-objective_toaster_pastries_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">
+        Current results for <a href="https://podfoods.co/products?term=toaster%20pastries">
+        toaster pastries</a></figcaption>
+</figure>
+
+<figure style="border: 1px solid rgb(217 70 239);">
+  <a href="https://hackmd.io/_uploads/SkObnXe9R.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/SkObnXe9R.png" alt="podfoods-trieve_toaster_pastries_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">
+        Trieve results for <a href="https://podfoods.trieve.ai/?term=toaster%20pastries">toaster pastries</a></figcaption>
+</figure>
+
+<span>Here are the results for the query variants:</span>
+
+<small>
+  <b>[healthy toaster pastries]</b>
+</small>
+
+<br>
+
+<div style="display: flex; justify-content: space-between;">
+  <figure style="width: 49%; border: 1px solid #ccc; margin: 5px;">
+  <a href="https://hackmd.io/_uploads/SJl_TLxe50.png" target="_blank"><img src="https://hackmd.io/_uploads/SJl_TLxe50.png" alt="podfoods-objective_healthy_toaster_pastries_2024_08_06" style="width: 100%; height: auto;"></a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">Results for <a href="https://podfoods.co/products?term=healthy%20toaster%20pastries">Pod[healthy toaster pastries]</a></figcaption>
+</figure>
+  <figure style="width: 49%; border: 1px solid rgb(217 70 239); margin: 5px;">
+  <a href="https://hackmd.io/_uploads/SyOb2XlqC.png" target="_blank"><img src="https://hackmd.io/_uploads/SyOb2XlqC.png" alt="podfoods-trieve_healthy_toaster_pastries_2024_08_06" style="width: 100%; height: auto;"></a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">Results for <a href="https://podfoods.trieve.ai/?term=healthy%20toaster%20pastries">Trieve[healthy toaster pastries]</a></figcaption>
+</figure>
+</div>
+
+<small>
+  <b>[natural toaster pastries]</b>
+</small>
+
+<br>
+
+<div style="display: flex; justify-content: space-between;">
+  <figure style="width: 49%; border: 1px solid #ccc; margin: 5px;">
+  <a href="https://hackmd.io/_uploads/r1z_68lgcA.png" target="_blank"><img src="https://hackmd.io/_uploads/r1z_68lgcA.png" alt="podfoods-objective_natural_toaster_pastries_2024_08_06" style="width: 100%; height: auto;"></a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">Results for <a href="https://podfoods.co/products?term=natural%20toaster%20pastries">Pod[natural toaster pastries]</a></figcaption>
+</figure>
+  <figure style="width: 49%; border: 1px solid rgb(217 70 239); margin: 5px;">
+  <a href="https://hackmd.io/_uploads/rJOZn7e9C.png" target="_blank"><img src="https://hackmd.io/_uploads/rJOZn7e9C.png" alt="podfoods-trieve_natural_toaster_pastries_2024_08_06" style="width: 100%; height: auto;"></a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">Results for <a href="https://podfoods.trieve.ai/?term=natural%20toaster%20pastries">Trieve[natural toaster pastries]</a></figcaption>
+</figure>
+</div>
+
+<small>
+  <b>[real fruit toaster pastries]</b>
+</small>
+
+<br>
+
+<div style="display: flex; justify-content: space-between;">
+  <figure style="width: 49%; border: 1px solid #ccc; margin: 5px;">
+  <a href="https://hackmd.io/_uploads/SkG_T8egcC.png" target="_blank"><img src="https://hackmd.io/_uploads/SkG_T8egcC.png" alt="podfoods-objective_real_fruit_toaster_pastries_2024_08_06" style="width: 100%; height: auto;"></a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">Results for <a href="https://podfoods.co/products?term=real%20fruit%20toaster%20pastries">Pod[real fruit toaster pastries]</a></figcaption>
+</figure>
+  <figure style="width: 49%; border: 1px solid rgb(217 70 239); margin: 5px;">
+  <a href="https://hackmd.io/_uploads/Hk_ZnQl50.png" target="_blank"><img src="https://hackmd.io/_uploads/Hk_ZnQl50.png" alt="podfoods-trieve_real_fruit_toaster_pastries_2024_08_06" style="width: 100%; height: auto;"></a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">Results for <a href="https://podfoods.trieve.ai/?term=real%20fruit%20toaster%20pastries">Trieve[real fruit toaster pastries]</a></figcaption>
+</figure>
+</div>
+
+### specific product variant
+
+**[Orange Blossom Almond tea]**<br>
+The current results do not appear to be very relevant. The fourth result is actually quite relevant, a product with a variant that is "Know by Heart - Orange Blossom Almond White Tea", though the presentation of the search result does not make the relevance of the result clear to the user. Since the Trieve demo breaks out the individual product variants, the relevance of the result is more clear.<br>
+
+<figure style="border: 1px solid #ccc;">
+  <a href="https://hackmd.io/_uploads/r1-O68egqC.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/r1-O68egqC.png" alt="podfoods-objective_Orange_Blossom_Almond_tea_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">Results for <a href="https://podfoods.co/products?term=Orange%20Blossom%20Almond%20tea">Pod[Orange Blossom Almond tea]</a></figcaption>
+</figure>
+
+<figure style="border: 1px solid rgb(217 70 239);">
+  <a href="https://hackmd.io/_uploads/S1dWh7g5R.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/S1dWh7g5R.png" alt="podfoods-trieve_Orange_Blossom_Almond_tea_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">Results for <a href="https://podfoods.trieve.ai/?term=Orange%20Blossom%20Almond%20tea">Trieve[Orange Blossom Almond tea]</a></figcaption>
+</figure>
+
+### specific ingrediant + form
+
+**[raw honey bars]**<br>
+Here are the current results:<br>
+1) "UPGRADED kalumi BEAUTYfood marine collagen bars"<br>
+2) a bar with raw honey from Honeymoon Chocolates: right on the package image.<br>
+3) a bar from Raw Rev. (Where the description says: **"Not a raw food."**)<br>
+4) the "Raw Chocolate Essential Bars" from Rawmio, these are **vegan and do not contain raw honey**.<br>
+In Trieve, the top three results are all bars with raw honey.<br>
+
+<figure style="border: 1px solid #ccc;">
+  <a href="https://hackmd.io/_uploads/SyZOT8xlc0.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/SyZOT8xlc0.png" alt="podfoods-objective_raw_honey_bars_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">Results for <a href="https://podfoods.co/products?term=raw%20honey%20bars">Pod[raw honey bars]</a></figcaption>
+</figure>
+
+<figure style="border: 1px solid rgb(217 70 239);">
+  <a href="https://hackmd.io/_uploads/HJuW3XecA.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/HJuW3XecA.png" alt="podfoods-trieve_raw_honey_bars_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">Results for <a href="https://podfoods.trieve.ai/?term=raw%20honey%20bars">Trieve[raw honey bars]</a></figcaption>
+</figure>
+
+### keywords from description
+
+**[organic fair-trade cacao Peru coconut sugar raw cacao butter dark chocolate]**<br>
+We were looking for a specific product, the [Rawmio Essentials 70% Cacao Dark Chocolate Bar](https://podfoods.co/raw-chocolate-essential-bars-rawmio-p10945.html?sku=26894-raw-chocolate-essential-bar-mint&i=765851), from which we constructed the keyword search query. In the current search neither the particular bar nor anything from the Rawmio brand return in the top results.<br>
+
+<figure style="border: 1px solid #ccc;">
+  <a href="https://hackmd.io/_uploads/rk-uaUxe5A.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/rk-uaUxe5A.png" alt="podfoods-objective_organic_fair-trade_cacao_Peru_coconut_sugar_raw_cacao_butter_dark_chocolate_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">Results for <a href="https://podfoods.co/products?term=organic%20fair-trade%20cacao%20Peru%20coconut%20sugar%20raw%20cacao%20butter%20dark%20chocolate">Pod[organic fair-trade cacao Peru ...]</a></figcaption>
+</figure>
+
+<figure style="border: 1px solid rgb(217 70 239);">
+  <a href="https://hackmd.io/_uploads/BJdWnXec0.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/BJdWnXec0.png" alt="podfoods-trieve_organic_fair-trade_cacao_Peru_coconut_sugar_raw_cacao_butter_dark_chocolate_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">Results for <a href="https://podfoods.trieve.ai/?term=organic%20fair-trade%20cacao%20Peru%20coconut%20sugar%20raw%20cacao%20butter%20dark%20chocolate">Trieve[organic fair-trade cacao Peru ...]</a></figcaption>
+</figure>
+
+### long direct description
+
+**[Our unique nib-to-bar process begins with the finest organic, fair-trade, single-origin cacao sourced directly from Peru, mineral-rich coconut sugar, and luscious raw cacao butter stone ground at low temperatures. Our signature raw chocolate base is then infused with just the right touch of pure peppermint essence for a mint chocolate bar like none other. Essentially....purebliss with everybite.]**<br>
+We were looking for a specific product, the [Rawmio Essentials 70% Cacao Dark Chocolate Bar](https://podfoods.co/raw-chocolate-essential-bars-rawmio-p10945.html?sku=26894-raw-chocolate-essential-bar-mint&i=765851). We took the description as a whole and put it into the searchbar. In the current search neither the particular bar nor anything from the Rawmio brand return in the top results.<br>
+
+<figure style="border: 1px solid #ccc;">
+  <a href="https://hackmd.io/_uploads/BJxuTLxg90.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/BJxuTLxg90.png" alt="podfoods-objective_Our_unique_nib-to-bar_process_begins_with_the_fine_8f57d13a_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">Results for <a href="https://podfoods.co/products?term=Our%20unique%20nib-to-bar%20process%20begins%20with%20the%20fine">Pod[Our unique nib-to-bar process ...]</a></figcaption>
+</figure>
+
+<figure style="border: 1px solid rgb(217 70 239);">
+  <a href="https://hackmd.io/_uploads/ryubnml50.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/ryubnml50.png" alt="podfoods-trieve_Our_unique_nib-to-bar_process_begins_with_the_fine_8f57d13a_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">Results for <a href="https://podfoods.trieve.ai/?term=Our%20unique%20nib-to-bar%20process%20begins%20with%20the%20fine">Trieve[Our unique nib-to-bar process ...]</a></figcaption>
+</figure>
+
+### location
+
+**[Arizona]**<br>
+
+- The first result is from a brand based in Arizona.<br>
+
+- The third result is not based in Arizona (but does mention the Sonoran desert).<br>
+
+- The rest of the top results are from brands based in Washington, Oregon, California, and Virginia.<br>
+
+<figure style="border: 1px solid #ccc;">
+  <a href="https://hackmd.io/_uploads/BJ_TLggcC.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/BJ_TLggcC.png" alt="podfoods-objective_Arizona_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid #ccc; padding: 5px;">Results for <a href="https://podfoods.co/products?term=Arizona">Pod[Arizona]</a></figcaption>
+</figure>
+
+<figure style="border: 1px solid rgb(217 70 239);">
+  <a href="https://hackmd.io/_uploads/SJ_Znmg9C.png" target="_blank">
+  <img src="https://hackmd.io/_uploads/SJ_Znmg9C.png" alt="podfoods-trieve_Arizona_2024_08_06" style="width: 100%; height: auto;">
+</a>
+  <figcaption style="border-top: 1px solid rgb(217 70 239); padding: 5px;">Results for <a href="https://podfoods.trieve.ai/?term=Arizona">Trieve[Arizona]</a></figcaption>
+</figure>
+
+## Conclusion
+
+Instead of creating a context-free evaluation dataset, we wanted to just highlight the core differences between the search experiences and support self-directed exploration in the **live demo at [podfoods.trieve.ai](https://podfoods.trieve.ai)**.
+
+See the **open source repo on GitHub: [devflowinc/podfoods-discovery](https://github.com/devflowinc/podfoods-discovery))**.
