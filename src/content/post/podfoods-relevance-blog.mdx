@@ -1,13 +1,16 @@
 ---
-title: "Search Relevance Exploration: Pod Foods"
+publishDate: 2024-08-15T08:45:00Z
 author: danielsgriffin
 postSlug: podfoods-relevance-blog
 draft: false
+title: 'Search Relevance Exploration: Pod Foods'
+excerpt: 'Exploring eCommerce search with the Pod Foods wholesale grocery distribution catalog.'
+image: https://cdn.trieve.ai/github/trieve-podfoods-demo-screenshot.webp
+category: Explore
 tags:
   - demo
   - relevance
   - SPLADE
-image: https://cdn.trieve.ai/github/trieve-podfoods-demo-screenshot.webp
 ---
 
 import ImageComparison from '~/components/common/ImageComparison.astro';
@@ -16,15 +19,14 @@ import QueryDiscussion from '~/components/common/QueryDiscussion.astro';
 
 ## Introduction
 
-Trieve focuses on helping our customers build great discovery experiences. [Pod Foods](https://podfoods.co/) is a wholesale grocery distribution company with a search platform for its B2B marketplace. Their current search is provided by Objective, Inc. 
+Trieve focuses on helping our customers build great discovery experiences. [Pod Foods](https://podfoods.co/) is a wholesale grocery distribution company with a search platform for its B2B marketplace. Their current search is provided by Objective, Inc.
 
-Keyword search is enough for the vast majority of queries when someone knows what they're looking for, but less so when you're exploring. Pod Foods is really interesting because they are likely to have a significant number of users exploring rather than checking if a specific item is present. The whole point of the company is **to help retailers find new independent brands and help those brands be found**. So if discovery-focused search is not supported well, it's a big deal. 
+Keyword search is enough for the vast majority of queries when someone knows what they're looking for, but less so when you're exploring. Pod Foods is really interesting because they are likely to have a significant number of users exploring rather than checking if a specific item is present. The whole point of the company is **to help retailers find new independent brands and help those brands be found**. So if discovery-focused search is not supported well, it's a big deal.
 
 Pod Foods is not our customer, but at Trieve we've been wanting an opportunity to showcase our search infrastructure in an e-commerce context. Trieve's vector based search for semantic, fulltext, and hybrid modes is uniquely well-suited to Pod Foods' dataset. So we've built out a demo within a limited mockup of their website.
 
 - **Live demo:** [podfoods.trieve.ai](https://podfoods.trieve.ai)
 - **GitHub repo:** [devflowinc/podfoods-discovery](https://github.com/devflowinc/podfoods-discovery)
-
 
 ## Relevance Comparisons
 
@@ -108,7 +110,6 @@ Pod's Chief Merchandising Officer [posted on LinkedIn about the natural Ghetto G
   The terms **natural**, **healthy**, and **real fruit** are very relevant to the toaster pastries searches and these are terms used throughout the catalog. But the performance comparison can be made even more stark: completely out-of-context terms should not disrupt the rankings when the toaster pastry match is so clear. You can plug in queries like **[martian toaster pastries](https://podfoods.trieve.ai/?term=martian+toaster+pastries)**, **[hello world toaster pastries](https://podfoods.trieve.ai/?term=hello+world+toaster+pastries)**, and **[beautiful toaster pastries](https://podfoods.trieve.ai/?term=beautiful+toaster+pastries)** and in the fulltext search from Trieve you'll still get **[Pod Foods' best toaster pastries](https://podfoods.trieve.ai/?term=Pod+Foods'+best+toaster+pastries)**. That doesn't work in the current search implemantation.
  </TextBox>
 
-
 ### Specific Product Variant
 
 Search results in Pod Foods currently are grouped as Product and each product page lists out different variants. Many queriest may be focused not on a product as a whole, but a particular variant of that product (sometimes color, flavor, size, etc). Here we tried queries constructed to retrieve a specific product variant. The result quality here is a product of that search user interface decision and the fulltext search model's ability focus on the query as describing a tea, rather than as a bag-of-words.
@@ -147,7 +148,6 @@ Search results in Pod Foods currently are grouped as Product and each product pa
   leftLink="https://podfoods.co/products?term=grapefruit%20weird%20yerba"
   rightLink="https://podfoods.trieve.ai/?term=grapefruit%20weird%20yerba"
 />
-
 
 ### Specific Ingrediant + Form
 
@@ -228,7 +228,6 @@ In Trieve, all of the top results are from brands based in Arizona.
   rightLink="https://podfoods.trieve.ai/?term=Arizona"
 />
 
-
 ### Word to the Wise: Cannot ship vector search and simultaneously degrade keyword because that's always the base, most common case
 <QueryDiscussion query="organic fair-trade cacao Peru coconut sugar raw cacao butter dark chocolate">
   We were looking for a specific product, the [Rawmio Essentials 70% Cacao Dark
@@ -251,9 +250,8 @@ In Trieve, all of the top results are from brands based in Arizona.
   rightLink="https://podfoods.trieve.ai/?term=organic%20fair-trade%20cacao%20Peru%20coconut%20sugar%20raw%20cacao%20butter%20dark%20chocolate"
 />
 
-
 ## Conclusion
 
 Instead of creating a context-free evaluation dataset, we wanted to just highlight the core differences between the search experiences and support self-directed exploration in the **live demo at [podfoods.trieve.ai](https://podfoods.trieve.ai)**.
 
-See the **open source repo on GitHub: [devflowinc/podfoods-discovery](https://github.com/devflowinc/podfoods-discovery))**.
+See the **open source repo on GitHub: [devflowinc/podfoods-discovery](https://github.com/devflowinc/podfoods-discovery)**.
