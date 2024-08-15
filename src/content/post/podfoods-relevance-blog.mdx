@@ -19,7 +19,7 @@ import QueryDiscussion from '~/components/common/QueryDiscussion.astro';
 
 Trieve focuses on helping our customers build great discovery experiences and [Pod Foods](https://podfoods.co/) is a wholesale grocery distribution company with a search platform for its B2B marketplace.
 
-Keyword search is ideal when you exactly what you're looking for, but the wrong fit for exploring. Pod Foods seemed like an ideal user-experience to us, because their explicit business goal is **to help retailers find new independent brands and help those brands be found**.
+Keyword search is ideal when you know exactly what you're looking for, but the wrong fit for exploring. Pod Foods seemed like an ideal user-experience to us, because their explicit business goal is **to help retailers find new independent brands and help those brands be found**.
 
 Pod Foods is not our customer, but we've built out a demo within a limited mockup of their website to showcase and test our product. 
 
@@ -31,12 +31,12 @@ Pod Foods is not our customer, but we've built out a demo within a limited mocku
 Here we show several relevance comparisons between the existing search in Pod Foods and Trieve's AI-enhanced **fulltext** search.
 
 <TextBox>
-  Our fulltext search uses **[SPLADE](https://github.com/naver/splade), a sparse neural search retrieval model**. There are also two other search types available: **semantic**, a dense vector search using cosine distance powered by [Jina english embeddings](https://jina.ai/news/jina-ai-launches-worlds-first-open-source-8k-text-embedding-rivaling-openai), and a **hybrid**, which takes in results from both fulltext and semantic then merges and ranks them with the [BAAI/bge-reranker-large](https://huggingface.co/BAAI/bge-reranker-large) cross-encoder model.
+  Our fulltext search uses **[SPLADE](https://github.com/naver/splade), a sparse neural search retrieval model**. There are also two other search types available in the demo: **semantic**, a dense vector search using cosine distance powered by [Jina english embeddings](https://jina.ai/news/jina-ai-launches-worlds-first-open-source-8k-text-embedding-rivaling-openai), and a **hybrid**, which takes in results from both fulltext and semantic then merges and ranks them with the [BAAI/bge-reranker-large](https://huggingface.co/BAAI/bge-reranker-large) cross-encoder model.
 </TextBox>
 
 ### Searching for Natural, Healthy, Real Fruit Toaster Pastries
 
-Pod Food's Chief Merchandising Officer [posted on LinkedIn about the natural Ghetto Gastro toaster pastries in their catalog](https://www.linkedin.com/posts/peter-gialantzis-a14a1b88_cpg-naturalfoods-garbage-activity-7221838546095992832-Gxd0?utm_source=share&utm_medium=member_desktop). In the current search, searching for **toaster pastries** successfully returns the Ghetto Gastro pastries, but adding terms like "natural", "healthy", "real fruit" to the query shoves toaster pastries out of the top results. With SPLADE through Trieve, each of those queries correctly has the Ghetto Gastro pastries at the top. Since **SPLADE correctly identifies "toaster pastries" as the most import term**, the additional terms don't confuse the search engine into showing unrelated items before the intended pastries.
+Pod Food's Chief Merchandising Officer [posted on LinkedIn about the natural Ghetto Gastro toaster pastries in their catalog](https://www.linkedin.com/posts/peter-gialantzis-a14a1b88_cpg-naturalfoods-garbage-activity-7221838546095992832-Gxd0?utm_source=share&utm_medium=member_desktop). In the current search, searching for **toaster pastries** successfully returns the Ghetto Gastro pastries, but adding terms like "natural", "healthy", "real fruit" to the query shoves toaster pastries out of the top results. With SPLADE through Trieve, each of those queries correctly has the Ghetto Gastro pastries at the top. Since **SPLADE correctly identifies "toaster pastries" as the most important term**, the additional terms don't confuse the search engine into showing unrelated items before the intended pastries.
 
 <QueryDiscussion query="toaster pastries" />
 
@@ -104,7 +104,7 @@ Pod Food's Chief Merchandising Officer [posted on LinkedIn about the natural Ghe
 
 ### Specific Product Variant
 
-Search results in Pod Foods are currently show a product's first image instead of the most similar variant. However, real queries may focus on a particular color, flavor, size, etc. We show queries constructed to retrieve a specific product variant in this section.
+Search results in Pod Foods currently show a product's first image instead of the most similar variant. However, real queries may focus on a particular color, flavor, size, etc. We show results for queries constructed to retrieve a specific product variant in this section.
 
 <QueryDiscussion query="Orange Blossom Almond tea">
   The current results do not _appear_ relevant, but the fourth result actually is due to its "Know by Heart - Orange Blossom Almond White Tea" variant. The current UI hides that, but since the Trieve demo breaks out the individual product variants, its relevance is apparent. Trieve also ranks correctly, but we are not trying to highlight that here.
@@ -146,7 +146,7 @@ Search results in Pod Foods are currently show a product's first image instead o
 Terms focused on general categories or nouns must be prioritized over descriptors for search to work correctly. We compare Trieve against the current search for queries containing both a type of product and key ingredient in this section.
 
 <QueryDiscussion query="raw honey bars">
-  Rating of current results. Broadly, they are thrown off by the "honey" term to not focus on bars:
+  Rating of current results. Broadly, they are thrown off by the "honey" term to not focus on bars or the "Raw" in the brand or product name:
 
   1. ❌ "UPGRADED kalumi BEAUTYfood marine collagen bars"
   2. ✅ a bar with raw honey from Honeymoon Chocolates
