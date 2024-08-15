@@ -30,11 +30,11 @@ const {
 const containerClasses = size === 'medium' ? 'ml-4' : '';
 ---
 
-<div class={`mx-auto max-w-3xl ${containerClasses}`}>
+<div class={`mx-auto max-w-3xl mb-5 ${containerClasses}`}>
   <div class="flex justify-between">
     <div class="w-[49%]">
-      <figure class="m-0" style="margin-top: 10px">
-        <figcaption class="p-1 text-center">
+      <figure class="m-0">
+        <figcaption class="mt-1 text-center">
           <small
             >{leftCaption} results for
             <a href={leftLink} target="_blank">{query}</a></small
@@ -50,8 +50,8 @@ const containerClasses = size === 'medium' ? 'ml-4' : '';
       </figure>
     </div>
     <div class="w-[49%]">
-      <figure class="m-0" style="margin-top: 10px">
-        <figcaption class="p-1 text-center">
+      <figure class="m-0">
+        <figcaption class="mt-1 text-center">
           <small
             >{rightCaption} results for
             <a href={rightLink} target="_blank">{query}</a></small
