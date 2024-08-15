@@ -36,7 +36,7 @@ The demo also shows two other search types: **semantic**, a dense vector search 
 
 ### A Motivating Example: Searching for Natural, Healthy, Real Fruit Toaster Pastries
 
-Pod's Chief Merchandising Officer [posted on LinkedIn about the natural Ghetto Gastro toaster pastries in their catalog](https://www.linkedin.com/posts/peter-gialantzis-a14a1b88_cpg-naturalfoods-garbage-activity-7221838546095992832-Gxd0?utm_source=share&utm_medium=member_desktop). In the current search, searching for **toaster pastries** successfully returns the Ghetto Gastro pastries at the top, but adding words like "natural", "healthy", "real fruit" to the search query shoves toaster pastries out of the top results. In Trieve, each of those queries has the Ghetto Gastro pastries at the top. Since **SPLADE expands both the query and indexed documents with relevant terms**, the retrieval model scores these results higher even when there is not an exact match. The additional terms don't force the results to drift away from the toaster pastries. 
+Pod Food's Chief Merchandising Officer [posted on LinkedIn about the natural Ghetto Gastro toaster pastries in their catalog](https://www.linkedin.com/posts/peter-gialantzis-a14a1b88_cpg-naturalfoods-garbage-activity-7221838546095992832-Gxd0?utm_source=share&utm_medium=member_desktop). In the current search, searching for **toaster pastries** successfully returns the Ghetto Gastro pastries at the top, but adding words like "natural", "healthy", "real fruit" to the search query shoves toaster pastries out of the top results. In Trieve, each of those queries has the Ghetto Gastro pastries at the top. Since **SPLADE expands both the query and indexed documents with relevant terms**, the retrieval model scores these results higher even when there is not an exact match. The additional terms don't force the results to drift away from the toaster pastries. 
 
 <QueryDiscussion query="toaster pastries">
 </QueryDiscussion>
@@ -105,12 +105,12 @@ Pod's Chief Merchandising Officer [posted on LinkedIn about the natural Ghetto G
 />
 
  <TextBox>
-  The terms **natural**, **healthy**, and **real fruit** are very relevant to the toaster pastries searches and these are terms used throughout the catalog. But the performance comparison can be made even more stark: completely out-of-context terms should not disrupt the rankings when the toaster pastry match is so clear. You can plug in queries like **[martian toaster pastries](https://podfoods.trieve.ai/?term=martian+toaster+pastries)**, **[hello world toaster pastries](https://podfoods.trieve.ai/?term=hello+world+toaster+pastries)**, and **[beautiful toaster pastries](https://podfoods.trieve.ai/?term=beautiful+toaster+pastries)** and in the fulltext search from Trieve you'll still get **[Pod Foods' best toaster pastries](https://podfoods.trieve.ai/?term=Pod+Foods'+best+toaster+pastries)**. That doesn't work in the current search implemantation.
+  The terms **natural**, **healthy**, and **real fruit** are very relevant to the toaster pastries searches and these are terms used throughout the catalog. But the performance comparison can be made even more stark: completely out-of-context terms should not disrupt the rankings when the toaster pastry match is so clear. You can plug in queries like **[martian toaster pastries](https://podfoods.trieve.ai/?term=martian+toaster+pastries)**, **[hello world toaster pastries](https://podfoods.trieve.ai/?term=hello+world+toaster+pastries)**, and **[beautiful toaster pastries](https://podfoods.trieve.ai/?term=beautiful+toaster+pastries)** and in the fulltext search from Trieve you'll still get **[Pod Foods' best toaster pastries](https://podfoods.trieve.ai/?term=Pod+Foods'+best+toaster+pastries)**. That doesn't work in the current search implementation.
  </TextBox>
 
 ### Specific Product Variant
 
-Search results in Pod Foods currently are grouped as Product and each product page lists out different variants. Many queriest may be focused not on a product as a whole, but a particular variant of that product (sometimes color, flavor, size, etc). Here we tried queries constructed to retrieve a specific product variant. The result quality here is a product of that search user interface decision and the fulltext search model's ability focus on the query as describing a tea, rather than as a bag-of-words.
+Search results in Pod Foods currently are grouped as Product and each product page lists out different variants. Many queries may be focused not on a product as a whole, but a particular variant of that product (sometimes color, flavor, size, etc). Here we tried queries constructed to retrieve a specific product variant. The result quality here is a product of that search user interface decision and the fulltext search model's ability to focus on the query as describing a tea, rather than as a bag-of-words.
 
 <QueryDiscussion query="Orange Blossom Almond tea">
   The current results do not _appear_ to be very relevant at all. But the fourth result is actually quite relevant, a product with a variant that is "Know by Heart - Orange Blossom Almond White Tea". The presentation of the search result does not make the relevance of the result clear to the user. The Trieve demo breaks out the individual product variants, so the relevance of the result (the top result) is more clear.
@@ -147,7 +147,7 @@ Search results in Pod Foods currently are grouped as Product and each product pa
   rightLink="https://podfoods.trieve.ai/?term=grapefruit%20weird%20yerba"
 />
 
-### Specific Ingrediant + Form
+### Specific Ingredient + Form
 
 Here we focused on searching both the form of the product and a key ingredient. Quality results here also required a retrieval model that could look at the query as a whole, and not as disconnected aspects.
 
@@ -227,6 +227,11 @@ In Trieve, all of the top results are from brands based in Arizona.
 />
 
 ### Word to the Wise: Cannot ship vector search and simultaneously degrade keyword because that's always the base, most common case
+
+In e-commerce platforms, users often rely on keyword searches to find specific types of products. Some vector search techniques, while powerful, do not support keyword searches well because the terms are often outside the model's training data or domain.
+
+If users are likely to use keyword searches and expect to find specific products, then the retrieval models should be selected (or adapted with rerankers) to support that use case. We address this issue with SPLADE in our fulltext search, and provide the flexibility for the searcher to also use the semantic search or the hybrid search.
+
 <QueryDiscussion query="organic fair-trade cacao Peru coconut sugar raw cacao butter dark chocolate">
   We were looking for a specific product, the [Rawmio Essentials 70% Cacao Dark
   Chocolate Bar](https://podfoods.co/raw-chocolate-essential-bars-rawmio-p10945.html?sku=26894-raw-chocolate-essential-bar-mint&i=765851),
