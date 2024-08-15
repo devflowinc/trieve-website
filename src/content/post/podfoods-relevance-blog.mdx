@@ -1,47 +1,49 @@
 ---
-title: "Search Relevance Exploration: Pod Foods"
+publishDate: 2024-08-15T08:45:00Z
 author: danielsgriffin
-postSlug: podfoods-relevance-blog
-draft: true
+title: 'Search Relevance Exploration: Pod Foods'
+excerpt: 'Exploring eCommerce search with the Pod Foods wholesale grocery distribution catalog.'
+image: https://cdn.trieve.ai/github/trieve-podfoods-demo-screenshot.webp
+category: Explore
 tags:
   - demo
   - relevance
   - SPLADE
-image: https://cdn.trieve.ai/github/trieve-podfoods-demo-screenshot.webp
 ---
 
 import ImageComparison from '~/components/common/ImageComparison.astro';
 
-
 ## Introduction
 
-Trieve focuses on helping our customers build great discovery experiences. [Pod Foods](https://podfoods.co/) is a wholesale grocery distribution company with a search platform for its B2B marketplace. Their current search is provided by Objective, Inc. 
+Trieve focuses on helping our customers build great discovery experiences. [Pod Foods](https://podfoods.co/) is a wholesale grocery distribution company with a search platform for its B2B marketplace. Their current search is provided by Objective, Inc.
 
-Keyword search is enough for the vast majority of queries when someone knows what they're looking for, but less so when you're exploring. Pod Foods is really interesting because they are likely to have a significant number of users exploring rather than checking if a specific item is present. The whole point of the company is **to help retailers find new independent brands and help those brands be found**. So if discovery-focused search is not supported well, it's a big deal. 
+Keyword search is enough for the vast majority of queries when someone knows what they're looking for, but less so when you're exploring. Pod Foods is really interesting because they are likely to have a significant number of users exploring rather than checking if a specific item is present. The whole point of the company is **to help retailers find new independent brands and help those brands be found**. So if discovery-focused search is not supported well, it's a big deal.
 
 Pod Foods is not our customer, but at Trieve we've been wanting an opportunity to showcase our search infrastructure in an e-commerce context. Trieve's vector based search for semantic, fulltext, and hybrid modes is uniquely well-suited to Pod Foods' dataset. So we've built out a demo within a limited mockup of their website.
 
 - **Live demo:** [podfoods.trieve.ai](https://podfoods.trieve.ai)
 - **GitHub repo:** [devflowinc/podfoods-discovery](https://github.com/devflowinc/podfoods-discovery)
 
-
-
 ## Relevance Comparisons
 
 I've compiled several relevance comparisons between the existing search in Pod Foods and Trieve's **fulltext** search. Our fulltext search uses **[SPLADE](https://github.com/naver/splade), a sparse neural search retrieval model**.
 
 <div class="mx-5" style="background-color: #f9f9f9; border: 1px solid #ccc; padding: 10px; font-size: 0.8em;">
-  <p style="margin: 0;">The demo also shows two other search types: 
-    <strong>semantic</strong>, a dense vector search using cosine distance vectors 
-    (here using <a href="https://jina.ai/news/jina-ai-launches-worlds-first-open-source-8k-text-embedding-rivaling-openai">
-    Jina english embeddings</a>), and <strong>hybrid</strong>, which takes in results 
-    from both fulltext and hybrid and re-ranks with a cross-encoder model (here the 
-    <a href="https://huggingface.co/BAAI/bge-reranker-large">BAAI/bge-reranker-large</a>).</p>
+  <p style="margin: 0;">
+    The demo also shows two other search types:
+    <strong>semantic</strong>, a dense vector search using cosine distance vectors (here using{' '}
+    <a href="https://jina.ai/news/jina-ai-launches-worlds-first-open-source-8k-text-embedding-rivaling-openai">
+      Jina english embeddings
+    </a>
+    ), and <strong>hybrid</strong>, which takes in results from both fulltext and hybrid and re-ranks with a
+    cross-encoder model (here the
+    <a href="https://huggingface.co/BAAI/bge-reranker-large">BAAI/bge-reranker-large</a>).
+  </p>
 </div>
 
 ### A Motivating Example: Searching for Natural, Healthy, Real Fruit Toaster Pastries
 
- Pod's Chief Merchandising Officer [posted on LinkedIn about the natural Ghetto Gastro toaster pastries in their catalog](https://www.linkedin.com/posts/peter-gialantzis-a14a1b88_cpg-naturalfoods-garbage-activity-7221838546095992832-Gxd0?utm_source=share&utm_medium=member_desktop). In the current search, searching for **toaster pastries** successfully returns the Ghetto Gastro pastries at the top, but adding words like "natural", "healthy", "real fruit" to the search query shoves toaster pastries out of the top results. In Trieve, each of those queries has the Ghetto Gastro pastries at the top. Since **SPLADE expands both the query and indexed documents with relevant terms**, the retrieval model scores these results higher even when there is not an exact match. The additional terms don't force the results to drift away from the toaster pastries. 
+Pod's Chief Merchandising Officer [posted on LinkedIn about the natural Ghetto Gastro toaster pastries in their catalog](https://www.linkedin.com/posts/peter-gialantzis-a14a1b88_cpg-naturalfoods-garbage-activity-7221838546095992832-Gxd0?utm_source=share&utm_medium=member_desktop). In the current search, searching for **toaster pastries** successfully returns the Ghetto Gastro pastries at the top, but adding words like "natural", "healthy", "real fruit" to the search query shoves toaster pastries out of the top results. In Trieve, each of those queries has the Ghetto Gastro pastries at the top. Since **SPLADE expands both the query and indexed documents with relevant terms**, the retrieval model scores these results higher even when there is not an exact match. The additional terms don't force the results to drift away from the toaster pastries.
 
 <p style="margin-bottom: 0px;">Query: **toaster pastries**</p>
 
@@ -105,10 +107,32 @@ I've compiled several relevance comparisons between the existing search in Pod F
   rightLink="https://podfoods.trieve.ai/?term=real%20fruit%20toaster%20pastries"
 />
 
- <div class="mx-10" style="background-color: #f9f9f9; border: 1px solid #ccc; padding: 10px; font-size: 0.8em;">
-  <p style="margin: 0;">The terms **natural**, **healthy**, and **real fruit** are very relevant to the toaster pastries searches and these are terms used throughout the catalog. But the performance comparison can be made even more stark: completely out-of-context terms should not disrupt the rankings when the toaster pastry match is so clear. You can plug in queries like <a href="https://podfoods.trieve.ai/?term=martian+toaster+pastries" target="_blank">**martian toaster pastries**</a>, <a href="https://podfoods.trieve.ai/?term=hello+world+toaster+pastries" target="_blank">**hello world toaster pastries**</a>, and <a href="https://podfoods.trieve.ai/?term=beautiful+toaster+pastries" target="_blank">**beautiful toaster pastries**</a> and in the fulltext search from Trieve you'll still get <a href="https://podfoods.trieve.ai/?term=Pod+Foods'+best+toaster+pastries" target="_blank">**Pod Foods' best toaster pastries**</a>. That doesn't work in the current search implemantation.</p>
-</div>
+{' '}
 
+<div class="mx-10" style="background-color: #f9f9f9; border: 1px solid #ccc; padding: 10px; font-size: 0.8em;">
+  <p style="margin: 0;">
+    The terms **natural**, **healthy**, and **real fruit** are very relevant to the toaster pastries searches and these
+    are terms used throughout the catalog. But the performance comparison can be made even more stark: completely
+    out-of-context terms should not disrupt the rankings when the toaster pastry match is so clear. You can plug in
+    queries like{' '}
+    <a href="https://podfoods.trieve.ai/?term=martian+toaster+pastries" target="_blank">
+      **martian toaster pastries**
+    </a>
+    ,{' '}
+    <a href="https://podfoods.trieve.ai/?term=hello+world+toaster+pastries" target="_blank">
+      **hello world toaster pastries**
+    </a>
+    , and{' '}
+    <a href="https://podfoods.trieve.ai/?term=beautiful+toaster+pastries" target="_blank">
+      **beautiful toaster pastries**
+    </a>{' '}
+    and in the fulltext search from Trieve you'll still get{' '}
+    <a href="https://podfoods.trieve.ai/?term=Pod+Foods'+best+toaster+pastries" target="_blank">
+      **Pod Foods' best toaster pastries**
+    </a>
+    . That doesn't work in the current search implemantation.
+  </p>
+</div>
 
 ### Specific Product Variant
 
@@ -116,7 +140,12 @@ Search results in Pod Foods currently are grouped as Product and each product pa
 
 <p style="margin-bottom: 0px;">Query: **Orange Blossom Almond tea**</p>
 
-<small>The current results do not _appear_ to be very relevant at all. But the fourth result is actually quite relevant, a product with a variant that is 'Know by Heart - Orange Blossom Almond White Tea'. The presentation of the search result does not make the relevance of the result clear to the user. The Trieve demo breaks out the individual product variants, so the relevance of the result (the top result) is more clear.</small>
+<small>
+  The current results do not _appear_ to be very relevant at all. But the fourth result is actually quite relevant, a
+  product with a variant that is 'Know by Heart - Orange Blossom Almond White Tea'. The presentation of the search
+  result does not make the relevance of the result clear to the user. The Trieve demo breaks out the individual product
+  variants, so the relevance of the result (the top result) is more clear.
+</small>
 
 <ImageComparison
   query="Orange Blossom Almond tea"
@@ -131,10 +160,15 @@ Search results in Pod Foods currently are grouped as Product and each product pa
   rightLink="https://podfoods.trieve.ai/?term=Orange%20Blossom%20Almond%20tea"
 />
 
-
 <p style="margin-bottom: 0px;">Query: **grapefruit weird yerba**</p>
 
-<small>When you search [grapefruit weird yerba](https://podfoods.co/products?term=grapefruit%20weird%20yerba) the first result is labelled "WEIRD Iced Tea, Organic | 12 Pack By Weird Beverages". When you hover over the result, the images cycle through variants of the product. You have to click through to the product page to see the different variant names themselves. This can make it hard for a user to know if the product is what they are looking for or if the search results are relevant at all.</small>
+<small>
+  When you search [grapefruit weird yerba](https://podfoods.co/products?term=grapefruit%20weird%20yerba) the first
+  result is labelled "WEIRD Iced Tea, Organic | 12 Pack By Weird Beverages". When you hover over the result, the images
+  cycle through variants of the product. You have to click through to the product page to see the different variant
+  names themselves. This can make it hard for a user to know if the product is what they are looking for or if the
+  search results are relevant at all.
+</small>
 
 <ImageComparison
   query="grapefruit weird yerba"
@@ -149,7 +183,6 @@ Search results in Pod Foods currently are grouped as Product and each product pa
   rightLink="https://podfoods.trieve.ai/?term=grapefruit%20weird%20yerba"
 />
 
-
 ### Specific Ingrediant + Form
 
 Here we focused on searching both the form of the product and a key ingredient. Quality results here also required a retrieval model that could look at the query as a whole, and not as disconnected aspects.
@@ -157,14 +190,14 @@ Here we focused on searching both the form of the product and a key ingredient. 
 <p style="margin-bottom: 0px;">Query: **raw honey bars**</p>
 
 <div class="mx-10" style="font-size: 0.8em;">
-Here are the current results:
-<ol style="list-style-type: decimal;">
-<li>❌ "UPGRADED kalumi BEAUTYfood marine collagen bars"</li>
-<li>✅ a bar with raw honey from Honeymoon Chocolates</li>
-<li>❌ a bar from Raw Rev. (Where the description says: **"Not a raw food."**)</li>
-<li>❌ the "Raw Chocolate Essential Bars" from Rawmio, these are **vegan and do not contain raw honey**.</li>
-</ol>
-In Trieve, the top three results are all bars with raw honey.
+  Here are the current results:
+  <ol style="list-style-type: decimal;">
+    <li>❌ "UPGRADED kalumi BEAUTYfood marine collagen bars"</li>
+    <li>✅ a bar with raw honey from Honeymoon Chocolates</li>
+    <li>❌ a bar from Raw Rev. (Where the description says: **"Not a raw food."**)</li>
+    <li>❌ the "Raw Chocolate Essential Bars" from Rawmio, these are **vegan and do not contain raw honey**.</li>
+  </ol>
+  In Trieve, the top three results are all bars with raw honey.
 </div>
 
 <ImageComparison
@@ -186,7 +219,13 @@ Here we looked to see if we could retrieve results specific to a location, somet
 
 <p style="margin-bottom: 0px;">Query: **Texas boutique yerba tea**</p>
 
-<small>The first tests we did were for the Austin-based Weird Beverages brand, which did not appear in the top results. The top result for the current search did have Texas in its name, but it was a coffee, and not yerba tea. Trieve gets the right result even if you use TX instead of Texas: <a href="https://podfoods.trieve.ai/?term=TX%20boutique%20yerba%20tea">TX boutique yerba tea</a>. Whereas, again due to the lack of effective query and document expansion that SPLADE brings us, the current results miss Texas entirely.</small>
+<small>
+  The first tests we did were for the Austin-based Weird Beverages brand, which did not appear in the top results. The
+  top result for the current search did have Texas in its name, but it was a coffee, and not yerba tea. Trieve gets the
+  right result even if you use TX instead of Texas:{' '}
+  <a href="https://podfoods.trieve.ai/?term=TX%20boutique%20yerba%20tea">TX boutique yerba tea</a>. Whereas, again due
+  to the lack of effective query and document expansion that SPLADE brings us, the current results miss Texas entirely.
+</small>
 
 <ImageComparison
   query="Texas boutique yerba tea"
@@ -201,17 +240,16 @@ Here we looked to see if we could retrieve results specific to a location, somet
   rightLink="https://podfoods.trieve.ai/?term=Texas%20boutique%20yerba%20tea"
 />
 
-
 <p style="margin-bottom: 0px;">Query: **Arizona**</p>
 
 <div class="mx-10" style="font-size: 0.8em;">
-Here are the current results:
-<ol style="list-style-type: decimal;">
-<li>✅ The first result is from a brand based in Arizona.</li>
-<li>❌ The third result is not based in Arizona (but does mention the Sonoran desert).</li>
-<li>❌ The rest of the top results are from brands based in Washington, Oregon, California, and Virginia.</li>
-</ol>
-In Trieve, all of the top results are from brands based in Arizona.
+  Here are the current results:
+  <ol style="list-style-type: decimal;">
+    <li>✅ The first result is from a brand based in Arizona.</li>
+    <li>❌ The third result is not based in Arizona (but does mention the Sonoran desert).</li>
+    <li>❌ The rest of the top results are from brands based in Washington, Oregon, California, and Virginia.</li>
+  </ol>
+  In Trieve, all of the top results are from brands based in Arizona.
 </div>
 
 <ImageComparison
@@ -227,12 +265,20 @@ In Trieve, all of the top results are from brands based in Arizona.
   rightLink="https://podfoods.trieve.ai/?term=Arizona"
 />
 
-
 ### Word to the Wise: Cannot ship vector search and simultaneously degrade keyword because that's always the base, most common case
 
-<p style="margin-bottom: 0px;">Query: **organic fair-trade cacao Peru coconut sugar raw cacao butter dark chocolate**</p>
+<p style="margin-bottom: 0px;">
+  Query: **organic fair-trade cacao Peru coconut sugar raw cacao butter dark chocolate**
+</p>
 
-<small>We were looking for a specific product, the <a href="https://podfoods.co/raw-chocolate-essential-bars-rawmio-p10945.html?sku=26894-raw-chocolate-essential-bar-mint&i=765851">Rawmio Essentials 70% Cacao Dark Chocolate Bar</a>, from which we constructed this keyword search query. In the current search, neither the particular bar nor anything from the Rawmio brand appears in the top results.</small>
+<small>
+  We were looking for a specific product, the{' '}
+  <a href="https://podfoods.co/raw-chocolate-essential-bars-rawmio-p10945.html?sku=26894-raw-chocolate-essential-bar-mint&i=765851">
+    Rawmio Essentials 70% Cacao Dark Chocolate Bar
+  </a>
+  , from which we constructed this keyword search query. In the current search, neither the particular bar nor anything
+  from the Rawmio brand appears in the top results.
+</small>
 
 <ImageComparison
   query="organic fair-trade cacao Peru coconut sugar raw cacao butter dark chocolate"
@@ -246,7 +292,6 @@ In Trieve, all of the top results are from brands based in Arizona.
   leftLink="https://podfoods.co/products?term=organic%20fair-trade%20cacao%20Peru%20coconut%20sugar%20raw%20cacao%20butter%20dark%20chocolate"
   rightLink="https://podfoods.trieve.ai/?term=organic%20fair-trade%20cacao%20Peru%20coconut%20sugar%20raw%20cacao%20butter%20dark%20chocolate"
 />
-
 
 ## Conclusion
 
