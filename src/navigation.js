@@ -85,6 +85,7 @@ export const footerData = {
         { text: 'Pricing', href: '/pricing' },
         { text: 'Developer Documentation', href: 'https://docs.trieve.ai' },
         { text: 'Typescript SDK', href: 'https://ts-sdk.trieve.ai' },
+        { text: 'DocSearch', href: '/docsearch' },
         { text: 'HN Search Engine', href: 'https://hn.trieve.ai' },
       ],
     },

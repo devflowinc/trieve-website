@@ -20,6 +20,8 @@ import {
 
 import { ANALYTICS, SITE } from './src/utils/config.ts';
 
+import solidJs from '@astrojs/solid-js';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const whenExternalScripts = (items = []) =>
@@ -36,28 +38,19 @@ export default defineConfig({
 
   output: 'static',
 
-  integrations: [
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    sitemap(),
-    mdx(),
-    icon({
-      include: {
-        tabler: ['*'],
-        'flat-color-icons': ['search', 'collaboration', 'multiple-inputs', 'document', 'binoculars', 'calendar'],
-        ri: ['*'],
-      },
-    }),
-
-    ...whenExternalScripts(() =>
-      partytown({
-        config: { forward: ['dataLayer.push'] },
-      })
-    ),
-
-    tasks(),
-  ],
+  integrations: [tailwind({
+    applyBaseStyles: false,
+  }), sitemap(), mdx(), icon({
+    include: {
+      tabler: ['*'],
+      'flat-color-icons': ['search', 'collaboration', 'multiple-inputs', 'document', 'binoculars', 'calendar'],
+      ri: ['*'],
+    },
+  }), ...whenExternalScripts(() =>
+    partytown({
+      config: { forward: ['dataLayer.push'] },
+    })
+  ), tasks(), solidJs()],
 
   image: {
     service: sharpImageService(),

@@ -91,6 +91,12 @@
 
 @layer base {
   html {
-    font-family: "Maven Pro", system-ui, sans-serif;
+    font-family: 'Maven Pro', system-ui, sans-serif;
   }
+}
+
+/* Code highlight styles */
+
+.usage-tabs pre.shiki {
+  @apply p-4 pr-10 text-xs h-full;
 }
