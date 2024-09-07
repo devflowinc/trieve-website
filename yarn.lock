@@ -5846,11 +5846,6 @@ solid-refresh@^0.6.3:
     "@babel/helper-module-imports" "^7.22.15"
     "@babel/types" "^7.23.6"
 
-solid-use@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/solid-use/-/solid-use-0.8.0.tgz#d46258c45edb0f4c621285e0ad1aa6b6a674d79b"
-  integrity sha512-YX+XmcKLvSx3bwMimMhFy40ZkDnShnUcEw6cW6fSscwKEgl1TG3GlgAvkBmQ3AeWjvQSd8+HGTr82ImsrjkkqA==
-
 source-map-js@^1.0.1, source-map-js@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.0.tgz#16b809c162517b5b8c3e7dcd315a2a5c2612b2af"
@@ -6137,13 +6132,6 @@ tar@^6.2.1:
     minizlib "^2.1.1"
     mkdirp "^1.0.3"
     yallist "^4.0.0"
-
-terracotta@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/terracotta/-/terracotta-1.0.5.tgz#633d3aa630f686f383e2577d156c14d261f7eb4c"
-  integrity sha512-4jkpXGKemeWjsBGDoBK1tnovGfIEMM8+Fa99T0TD4VYUaZq6hXHEWMfHshxy1h+DzsanDAwSBIBM0NnOohzijw==
-  dependencies:
-    solid-use "^0.8.0"
 
 text-table@^0.2.0:
   version "0.2.0"

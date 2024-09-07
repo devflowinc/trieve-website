@@ -8,7 +8,7 @@ const trieve = new TrieveSDK({
 
 initTrieveModalSearch({
   trieve,
-  theme: 'dark',
+  theme: localStorage.getItem('theme') || 'dark',
 });
 
 const SearchComponent = () => {

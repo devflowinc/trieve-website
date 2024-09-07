@@ -39,7 +39,7 @@ const UsageTabs = () => {
             onChange={(e) => setSelectedTab(e.target.value)}
             id="tabs"
             name="tabs"
-            class="block w-full rounded-md border-none bg-white/5 py-2 pl-3 pr-10 text-base text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm"
+            class="block w-full rounded-md border-none dark:bg-white/5 py-2 pl-3 pr-10 text-base dark:text-white shadow-sm ring-1 ring-inset dark:ring-white/10 focus:ring-2 focus:ring-inset focus:ring-purple-500 sm:text-sm"
           >
             <option value="react" selected={selectedTab() === 'react'}>
               React
@@ -50,7 +50,7 @@ const UsageTabs = () => {
           </select>
         </div>
         <div class="hidden sm:block">
-          <nav class="flex border-b border-white/10 py-4">
+          <nav class="flex border-b border-black/10 dark:border-white/10 py-4">
             <ul
               role="list"
               class="flex min-w-full flex-none gap-x-6 px-2 text-sm font-semibold leading-6 text-gray-400"
