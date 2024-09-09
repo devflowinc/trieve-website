@@ -16,6 +16,7 @@ const props = [
     type: 'TrieveSDK',
     description: 'The trieve instance used to search',
     defaut: 'null',
+    typeLink: 'https://ts-sdk.trieve.ai/',
   },
   {
     name: 'chat',
@@ -52,6 +53,7 @@ const props = [
     type: 'SearchChunksReqPayload',
     description: 'Any options you want to pass to the search function',
     defaut: '{ search_type: "hybrid" }',
+    typeLink: 'https://ts-sdk.trieve.ai/types/types_gen.SearchChunksReqPayload.html',
   },
 ];
 
@@ -80,10 +82,10 @@ const features = [
 ---
 
 <Layout metadata={metadata}>
-  <HeroText title="Docsearch" subtitle="AI search at your fingertips" />
+  <HeroText title="Docsearch" subtitle="Free Trieve Search and RAG For Developer Docs" />
 
   <!-- Search Example Widget *************** -->
-  <SearchComponent client:only />
+  <SearchComponent client:only="solid-js" />
 
   <!-- Features Widget *************** -->
 
@@ -91,7 +93,7 @@ const features = [
 
   <!-- Usage Widget *************** -->
   <Headline title={'Usage'} subtitle={'How to get started'} />
-  <UsageTabs client:only />
+  <UsageTabs client:only="solid-js" />
 
   <!-- Props Widget *************** -->
   <Headline title="Props" />
@@ -104,14 +106,16 @@ const features = [
             <thead>
               <tr>
                 {
-                  Object.keys(props[0]).map((key) => (
-                    <th
-                      scope="col"
-                      class="capitalize py-3.5 pl-4 pr-3 text-left text-sm font-semibold dark:text-white sm:pl-0"
-                    >
-                      {key}
-                    </th>
-                  ))
+                  Object.keys(props[0])
+                    .filter((key) => key != 'typeLink')
+                    .map((key) => (
+                      <th
+                        scope="col"
+                        class="capitalize py-3.5 pl-4 pr-3 text-left text-sm font-semibold dark:text-white sm:pl-0"
+                      >
+                        {key}
+                      </th>
+                    ))
                 }
               </tr>
             </thead>
@@ -119,11 +123,19 @@ const features = [
               {
                 props.map((prop) => (
                   <tr>
-                    {Object.values(prop).map((value) => (
-                      <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium dark:text-white sm:pl-0">
-                        {value}
-                      </td>
-                    ))}
+                    {Object.keys(prop)
+                      .filter((key) => key != 'typeLink')
+                      .map((key) => (
+                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium dark:text-white sm:pl-0">
+                          {key === 'type' && prop.typeLink ? (
+                            <a href={prop.typeLink} class="underline hover:text-blue-500">
+                              {prop[key]}
+                            </a>
+                          ) : (
+                            prop[key]
+                          )}
+                        </td>
+                      ))}
                   </tr>
                 ))
               }
