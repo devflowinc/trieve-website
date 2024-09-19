@@ -1,0 +1,284 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+
+const metadata = {
+  title: 'Trieve Self-Assessment',
+  description: 'Conduct a self-assessment to start your Trieve Audit and Impact Proof.',
+};
+
+// Explanation of the self-assessment flow:
+// 1. User starts the self-assessment by clicking the "Start Self-Assessment" button.
+// 2. The user is presented with a series of questions.
+// 3. The user answers each question.
+//  - the quesitons have a nextQuestionId (allowing branching logic) or are the last question
+//  - can include an image or explanation
+//  - the answers may be multiple choice or text
+// 4. The user clicks the "Next" button to move to the next question.
+// 5. The user clicks the "Finish" button to complete the self-assessment.
+// 6. The user is redirected to the Trieve Audit and Impact Proof page.
+
+
+const questions = [
+  {
+    id: 1,
+    text: 'What is your primary goal for implementing a search or AI solution?',
+    type: 'multiple-choice',
+    options: ['Improve accuracy', 'Increase speed', 'Enhance user experience', 'Other'],
+    explanation: 'This question helps us understand your main focus areas.',
+    nextQuestionId: 2,
+  },
+  {
+    id: 2,
+    text: 'How would you describe your current search capabilities?',
+    type: 'text',
+    explanation: 'Please provide as much detail as possible.',
+    nextQuestionId: 3,
+  },
+  {
+    id: 3,
+    text: 'What challenges are you facing with your current solution?',
+    type: 'text',
+    image: '/images/challenges.png',
+    nextQuestionId: 4,
+  },
+  {
+    id: 4,
+    text: 'What volume of data do you need to search through?',
+    type: 'multiple-choice',
+    options: ['Less than 1GB', '1GB to 100GB', '100GB to 1TB', 'More than 1TB'],
+    nextQuestionId: 5,
+  },
+  {
+    id: 5,
+    text: 'How important is real-time indexing for your use case?',
+    type: 'multiple-choice',
+    options: ['Critical', 'Important', 'Not important'],
+    nextQuestionId: null, // This is the last question.
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <div class="py-12 md:py-20">
+    <HeroText
+      title="Trieve Self-Assessment"
+      subtitle="<p class='mt-4'>Conduct this self-assessment to start your <a href='/audit' class='underline'>Trieve Audit and Impact Proof</a>.</p>"
+      callToAction={{
+        text: 'Start Self-Assessment',
+        href: '#',
+        id: 'openModal',
+        class: 'mt-8',
+      }}
+    />
+  </div>
+
+  <!-- Modal -->
+  <div
+    id="assessmentModal"
+    class="fixed inset-0 bg-gray-600 dark:bg-gray-800 bg-opacity-50 dark:bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center p-8"
+    style="min-height: 100vh; min-width: 100vw;"
+  >
+    <div
+      class="relative mx-auto p-8 border w-full max-w-md md:w-[90%] max-w-5xl shadow-lg rounded-lg bg-white dark:bg-gray-900"
+    >
+      <button
+        id="closeModalBtn"
+        class="absolute top-4 right-4 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <div id="modalContent" class="space-y-6 p-6 w-full">
+        <h3 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Self-Assessment</h3>
+        <div id="questionContainer" class="mb-6"></div>
+        <div class="flex justify-between items-center">
+          <button
+            id="prevBtn"
+            class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600"
+            >Previous</button
+          >
+          <button
+            id="nextBtn"
+            class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600"
+            >Next</button
+          >
+        </div>
+      </div>
+      <div id="resultsContainer" class="hidden space-y-6 p-6 w-full">
+        <h3 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Your Assessment Results</h3>
+        <div id="assessmentResults" class="space-y-4"></div>
+        <button
+          id="finishBtn"
+          class="mt-8 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors w-full"
+          >Finish</button
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div
+    id="confirmationModal"
+    class="fixed inset-0 bg-gray-600 dark:bg-gray-800 bg-opacity-50 dark:bg-opacity-50 flex items-center justify-center hidden z-50"
+  >
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg">
+      <p class="text-lg text-gray-800 dark:text-gray-200 mb-4">
+        Are you sure you want to exit? Your progress will be lost.
+      </p>
+      <div class="flex justify-end space-x-4">
+        <button
+          id="cancelExit"
+          class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          >Cancel</button
+        >
+        <button
+          id="confirmExit"
+          class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          >Exit</button
+        >
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ questions }}>
+    let currentQuestion = questions.find((q) => q.id === 1);
+    const answers = {};
+
+    const modal = document.getElementById('assessmentModal');
+    const openModalBtn = document.getElementById('openModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const questionContainer = document.getElementById('questionContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const modalContent = document.getElementById('modalContent');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const assessmentResults = document.getElementById('assessmentResults');
+    const finishBtn = document.getElementById('finishBtn');
+    const confirmationModal = document.getElementById('confirmationModal');
+    const cancelExitBtn = document.getElementById('cancelExit');
+    const confirmExitBtn = document.getElementById('confirmExit');
+
+    function openModal() {
+      modal.classList.remove('hidden');
+      showQuestion();
+    }
+
+    function showConfirmationModal() {
+      confirmationModal.classList.remove('hidden');
+    }
+
+    function hideConfirmationModal() {
+      confirmationModal.classList.add('hidden');
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      currentQuestion = questions.find((q) => q.id === 1);
+      modalContent.classList.remove('hidden');
+      resultsContainer.classList.add('hidden');
+    }
+
+    openModalBtn.onclick = openModal;
+    closeModalBtn.onclick = showConfirmationModal;
+    cancelExitBtn.onclick = hideConfirmationModal;
+    confirmExitBtn.onclick = () => {
+      hideConfirmationModal();
+      closeModal();
+    };
+    finishBtn.onclick = closeModal;
+
+    // Add event listener for the Escape key
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+        showConfirmationModal();
+      }
+    });
+
+    prevBtn.onclick = () => {
+      if (currentQuestion.id > 1) {
+        currentQuestion = questions.find((q) => q.id === currentQuestion.id - 1);
+        showQuestion();
+      }
+    };
+
+    nextBtn.onclick = () => {
+      const answer = getAnswer();
+      answers[currentQuestion.id] = answer;
+
+      if (currentQuestion.nextQuestionId) {
+        currentQuestion = questions.find((q) => q.id === currentQuestion.nextQuestionId);
+        showQuestion();
+      } else {
+        showResults();
+      }
+    };
+
+    function getAnswer() {
+      if (currentQuestion.type === 'multiple-choice') {
+        const selectedOption = document.querySelector('input[name="question"]:checked');
+        return selectedOption ? selectedOption.value : null;
+      } else {
+        return document.querySelector('textarea').value;
+      }
+    }
+
+    function showQuestion() {
+      const question = currentQuestion;
+      let questionHTML = `
+        <p class="text-lg font-medium mb-4 text-gray-800 dark:text-gray-200">${question.text}</p>
+      `;
+
+      if (question.explanation) {
+        questionHTML += `
+          <p class="mb-4 text-gray-600 dark:text-gray-400">${question.explanation}</p>
+        `;
+      }
+
+      if (question.image) {
+        questionHTML += `
+          <img src="${question.image}" alt="Question image" class="mb-4 max-w-full h-auto rounded-lg">
+        `;
+      }
+
+      if (question.type === 'multiple-choice') {
+        questionHTML += '<div class="space-y-2">';
+        question.options.forEach((option) => {
+          questionHTML += `
+            <label class="flex items-center">
+              <input type="radio" name="question" value="${option}" class="mr-2">
+              <span class="text-gray-800 dark:text-gray-200">${option}</span>
+            </label>
+          `;
+        });
+        questionHTML += '</div>';
+      } else {
+        questionHTML += `
+          <textarea class="w-full p-4 border rounded-lg text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 transition-all" rows="6">${answers[question.id] || ''}</textarea>
+        `;
+      }
+
+      questionContainer.innerHTML = questionHTML;
+
+      prevBtn.disabled = currentQuestion.id === 1;
+      nextBtn.textContent = currentQuestion.nextQuestionId ? 'Next' : 'Finish';
+    }
+
+    function showResults() {
+      modalContent.classList.add('hidden');
+      resultsContainer.classList.remove('hidden');
+      let resultsHTML = '<div class="space-y-6">';
+      for (const question of questions) {
+        resultsHTML += `
+          <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
+            <p class="font-bold text-lg mb-2 text-gray-800 dark:text-gray-200">${question.text}</p>
+            <p class="text-gray-600 dark:text-gray-400">${answers[question.id] || 'No answer provided'}</p>
+          </div>
+        `;
+      }
+      resultsHTML += '</div>';
+      assessmentResults.innerHTML = resultsHTML;
+    }
+  </script>
+</Layout>

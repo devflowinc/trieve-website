@@ -1,0 +1,62 @@
+---
+import { Icon } from 'astro-icon/components';
+import Button from '~/components/ui/Button.astro';
+import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+
+const {
+  title = '',
+  subtitle = '',
+  tagline = '',
+  steps = [],
+
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+---
+
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto py-6 ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+  <div class="flex items-stretch justify-center mt-8">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        steps &&
+          steps.map(({ title, price, description, items, callToAction }) => (
+            <div class="flex w-full">
+              <div class="rounded-lg backdrop-blur border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 shadow px-6 py-8 flex w-full flex-col justify-between text-center">
+                <div class="px-2 py-0">
+                  {title && (
+                    <>
+                      <h3 class="text-center text-xl font-semibold leading-6 tracking-wider mb-1">{title.split('.')[0]}</h3>
+                      <h4 class="text-center text-lg font-medium leading-6 tracking-wide mb-2">{title.split('.')[1]}</h4>
+                    </>
+                  )}
+                  {price && <p class="font-bold text-primary text-lg mb-4">{price}</p>}
+                  {description && (
+                    <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">{description}</p>
+                  )}
+                  {items && (
+                    <ul role="list" class="my-4 space-y-2 text-left">
+                      {items.map((item) => (
+                        <li class="flex items-start space-x-3 leading-7">
+                          <Icon name="tabler:check" class="w-5 h-5 mt-0.5 text-primary flex-shrink-0" />
+                          <span class="text-gray-600 dark:text-slate-400 text-sm">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                {callToAction && (
+                  <div class="flex justify-center mt-4">
+                    <Button {...callToAction} />
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+      }
+    </div>
+  </div>
+</WidgetWrapper>

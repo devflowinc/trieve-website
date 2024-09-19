@@ -1,0 +1,91 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import AuditSteps from '~/components/widgets/AuditSteps.astro';
+import Logos from '~/components/widgets/Logos.astro';
+
+const metadata = {
+  title: 'Trieve Audit and Impact Proof',
+  description: 'Conduct a self-assessment, book an audit call, implement the Trieve Proof, and see the Trieve Impact!',
+};
+
+const auditSteps = [
+  {
+    title: 'Step 1. Self-Assessment',
+    price: 'Free!',
+    description:
+      'Are you ready to build or rebuild your search, discovery, or grounded AI experience? Take our self-assessment and book a call with our experts for a focused audit.',
+    items: ["Useful even if you don't book an audit call"],
+    callToAction: {
+      text: 'Start Self-Assessment',
+      href: '/audit/self-assessment',
+      target: '_blank',
+    },
+  },
+  {
+    title: 'Step 2. Book an Audit Call',
+    price: 'Free!',
+    description:
+      'We will review your self-assessment and talk through your goals and challenges. We will start exploring specific recommendations for your situation.',
+    items: ['Explore pain points and dreams', 'Discuss augmenting existing products or starting from scratch'],
+    callToAction: {
+      text: 'Book Audit Call',
+      href: 'https://cal.com/nick.k/meet',
+      target: '_blank',
+    },
+  },
+  {
+    title: 'Step 3. Implement the Proof',
+    price: 'Free!',
+    description:
+      "Trieve is production-ready and we'll prove it. Within a week we will provide a detailed report of our findings and recommendations.",
+    items: [
+      'Detailed report with findings and recommendations',
+      'Specific action items',
+      'Observable metrics and success criteria',
+    ],
+  },
+  {
+    title: 'Step 4. See the Impact',
+    price: 'Free!',
+    description:
+      'Experience the impact of working with Trieve through hands-on exploration and performance comparisons.',
+    items: [
+      'Explore search, recommendations, and RAG in the Trieve Playground',
+      'Compare existing v. Trieve performance',
+      'A/B testing for click-through rate and conversions',
+    ],
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <HeroText
+    title="Trieve Audit and Impact Proof"
+    subtitle="<p>Conduct a self-assessment, book an audit call, implement the Trieve Proof, and see the Trieve Impact!</p>"
+    callToAction={{
+      target: '',
+      text: 'Step 1. Self-Assessment',
+      href: '/audit/self-assessment',
+    }}
+  />
+
+  <AuditSteps
+    title="Our Audit Process"
+    subtitle="Follow these steps to experience the Trieve impact"
+    steps={auditSteps}
+  />
+
+  <Logos
+    tagline={`<p class="text-black">
+        Powering search experiences across categories. See our
+        <a class="underline" href="/tag/success-story/"> customer success stories</a>.
+      </p>`}
+    logos={[
+      { src: 'https://cdn.trieve.ai/customer-logos/mintlify-logo.svg' },
+      { src: 'https://cdn.trieve.ai/customer-logos/billtrack50logo.svg' },
+      { src: 'https://cdn.trieve.ai/customer-logos/agentic-labs-logo.png' },
+      { src: 'https://cdn.trieve.ai/customer-logos/openmart-logo.svg' },
+    ]}
+  />
+</Layout>
