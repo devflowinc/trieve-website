@@ -11,50 +11,297 @@ const metadata = {
 // 1. User starts the self-assessment by clicking the "Start Self-Assessment" button.
 // 2. The user is presented with a series of questions.
 // 3. The user answers each question.
+//  - the first question is required to be answered to proceed
+//  - subsequent questions can be skipped
 //  - the quesitons have a nextQuestionId (allowing branching logic) or are the last question
 //  - can include an image or explanation
 //  - the answers may be multiple choice or text
 // 4. The user clicks the "Next" button to move to the next question.
 // 5. The user clicks the "Finish" button to complete the self-assessment.
 // 6. The user is redirected to the Trieve Audit and Impact Proof page.
-
+// Note: The user can exit the assessment at any time.
 
 const questions = [
   {
     id: 1,
-    text: 'What is your primary goal for implementing a search or AI solution?',
+    text: 'Do you currently have a search system or are you starting fresh?',
     type: 'multiple-choice',
-    options: ['Improve accuracy', 'Increase speed', 'Enhance user experience', 'Other'],
-    explanation: 'This question helps us understand your main focus areas.',
-    nextQuestionId: 2,
+    options: ['We have an existing search system', 'We are starting fresh'],
+    bottomExplanation:
+      'This question is required to proceed. It helps us understand your current situation and tailor our recommendations accordingly. For subsequent questions, you may skip without answering. These questions are intended to be generally applicable to search on internal applications, mobile applications, or websites. Not all questions are applicable to every application. Not every search experience would have all of these features.',
+    nextQuestionId: {
+      'We have an existing search system': 2,
+      'We are starting fresh': 2,
+    },
   },
   {
     id: 2,
-    text: 'How would you describe your current search capabilities?',
-    type: 'text',
-    explanation: 'Please provide as much detail as possible.',
+    text: 'Is your search use case more finding-oriented or discovery-oriented?',
+    type: 'multiple-choice',
+    options: ['Primarily finding-oriented', 'Primarily discovery-oriented', 'A mix of both'],
+    bottomExplanation:
+      'This question helps us understand your users\' search behavior. Finding-oriented searches are when users generally know what they\'re looking for, while discovery- or browsing-oriented searches involve users exploring and browsing through multiple results. Many search experiences involve a mix of both. Your answer will help us tailor our recommendations to your specific use case.',
     nextQuestionId: 3,
   },
   {
     id: 3,
-    text: 'What challenges are you facing with your current solution?',
-    type: 'text',
-    image: '/images/challenges.png',
+    text: 'What type of items are in your dataset?',
+    type: 'checkbox',
+    options: [
+      { label: 'Long documents (e.g., articles, policy documents, reports, books, etc.)', explanation: 'Documents with substantial text content, typically over 1000 words.' },
+      { label: 'Short documents (e.g., emails, messages, social media posts, forum comments, user reviews, etc.)', explanation: 'Brief text content, usually under 1000 words.' },
+      { label: 'Physical parts or products (e.g., inventory, stock, etc.)', explanation: 'Items for sale or managed in a catalog with attributes like name, description, price, origin, related items, etc.' },
+      { label: 'User-generated content (UGC)', explanation: 'Content created by users, such as reviews, comments, or forum posts. May have associated metadata.' },
+      { label: 'Images', explanation: 'Visual content, including photos, illustrations, or graphics. May have associated metadata.' },
+      { label: 'Videos', explanation: 'Audiovisual content. May have associated metadata.' },
+      { label: 'Audio files', explanation: 'Sound-only content, such as podcasts or music. May have associated metadata.' },
+      { label: 'Structured data (e.g., database records)', explanation: 'Information organized in a predefined format, like spreadsheets or database entries. May have associated metadata.' },
+      { label: 'Other', explanation: 'Please specify in the comments if selecting this option.' }
+    ],
+    explanation: 'Understanding the types of items in your dataset helps us tailor our recommendations for optimal search performance and relevance.',
     nextQuestionId: 4,
   },
   {
     id: 4,
-    text: 'What volume of data do you need to search through?',
-    type: 'multiple-choice',
-    options: ['Less than 1GB', '1GB to 100GB', '100GB to 1TB', 'More than 1TB'],
+    text: 'How do you update your search index and ingest new data?',
+    type: 'checkbox',
+    options: [
+      'Real-time indexing (updates as soon as new content is created or modified)',
+      'Scheduled batch updates (e.g., daily, weekly)',
+      'Manual updates (triggered by an administrator)',
+      'Incremental updates (only indexing changed or new content)',
+      'Full reindexing (periodically rebuilding the entire index)',
+      'API-driven updates (external systems push updates to the search index)',
+      'We don\'t have a process for updating our index yet'
+    ],
+    explanation: 'Understanding your indexing and data ingestion process helps us assess the freshness and completeness of your search results, as well as identify potential areas for optimization.',
     nextQuestionId: 5,
   },
   {
     id: 5,
-    text: 'How important is real-time indexing for your use case?',
+    text: 'What is the current size of your search system dataset?',
     type: 'multiple-choice',
-    options: ['Critical', 'Important', 'Not important'],
+    options: [
+      'Small (< 100,000 items)',
+      'Medium (100,000 - 1 million items)',
+      'Large (1 million - 10 million items)',
+      'Enterprise (> 10 million items)',
+      'Not sure / Other (please specify in comments)'
+    ],
+    explanation: 'Understanding the current size of your dataset helps us recommend appropriate solutions for your current needs..',
+    nextQuestionId: 6,
+  },
+  {
+    id: 6,
+    text: 'What is your current query rate (searches per day)?',
+    type: 'multiple-choice',
+    options: [
+      'Low (< 1,000 searches/day)',
+      'Medium (1,000 - 10,000 searches/day)',
+      'High (10,000 - 100,000 searches/day)',
+      'Very High (> 100,000 searches/day)',
+      'Not sure / Other (please specify in comments)'
+    ],
+    explanation: 'Understanding your current query rate helps us assess the performance requirements for your search system.',
+    nextQuestionId: 7,
+  },
+  {
+    id: 7,
+    text: 'Search Interface and Query Submission',
+    type: 'checkbox',
+    options: [
+      {
+        label: 'Easy to find and access on the website',
+        explanation: 'A clearly labeled search bar or magnifying glass icon. Perhaps accessible via a keyboard shortcut.',
+      },
+      {
+        label: 'Opens promptly, clearly, and without issues',
+        explanation: 'Whether via click or keyboard shortcut. Standard keyboard shortcuts: `Ctrl + K` or `Cmd + K`, `Ctrl + /` or `Cmd + /`.',
+      },
+      {
+        label: 'Provides search suggestions and/or autocomplete as the user types',
+        explanation: 'Perhaps only via the placeholder text. If likely beneficial to the user. Instant results may preclude this. These may be based on popular search queries or recent searches; or designed to suggest the range of queries supported by the search system.',
+      },
+      {
+        label: 'Includes a link to search tips or help',
+        explanation: 'Whether in the search interface, search results, clearly findable elsewhere on the site, or via an empty search.',
+      },
+      {
+        label: 'Search can be submitted via a button or keyboard shortcut',
+        explanation: 'Standard keyboard shortcuts: `Enter` or `Return`, `Ctrl + Enter` or `Cmd + Enter`.',
+      },
+      {
+        label: 'Accessible via screen reader',
+        explanation: 'Uses `aria-label` or `aria-labelledby` to label the search bar.',
+      },
+      {
+        label: 'Query can be submitted via URL',
+        explanation: 'A query parameter such as `q` or `query` (allows for site-search shortcuts). Optional: Sitelinks search box (WebSite) - https://developers.google.com/search/docs/appearance/structured-data/sitelinks-searchbox. Optional: OpenSearchDescription.',
+      },
+      {
+        label: 'Extra: Offers instant results (search-as-you-type or incremental search)',
+        explanation: 'Whether via a button or other trigger. Should be debounced or throttled to avoid excessive load on the server, bandwidth, and server attention. Should gracefully handle shifting page elements.',
+      },
+      {
+        label: 'Extra: Provides disambiguation, refinement, or clarification options and suggestions in the search interface itself',
+        explanation: '',
+      },
+    ],
+    explanation: 'Please check all that apply to your search interface and query submission process.',
+    nextQuestionId: 8,
+  },
+  {
+    id: 8,
+    text: 'Results Presentation and Relevance',
+    type: 'checkbox',
+    options: [
+      {
+        label: 'Basic result display (e.g., title, URL or link text)',
+        explanation: 'Search results show at least the basic information for each item.',
+      },
+      {
+        label: 'Enhanced result display (e.g., snippets, thumbnails, rich snippets)',
+        explanation: 'Results include additional context or visual elements to improve user understanding.',
+      },
+      {
+        label: 'Top results for target terms appear relevant and within the first page',
+        explanation: 'The most pertinent results are prominently displayed on the first page of results.',
+      },
+      {
+        label: 'Results include comprehensive metadata fit for purpose',
+        explanation: 'Metadata such as name, description, date, type of document, image, author, location, category, price, rating, reviews are included as appropriate.',
+      },
+      {
+        label: 'Search terms highlighted in the search results',
+        explanation: 'The user\'s search terms are visually emphasized within the results for easy identification. Ex. Sub-sentence highlighting.',
+      },
+      {
+        label: 'Feedback mechanisms for users to report issues with search results',
+        explanation: 'Users can easily report irrelevant or problematic search results.',
+      },
+      {
+        label: 'Results pages can be navigated by keyboard',
+        explanation: 'Users can navigate through search results using keyboard controls for accessibility. Ex. Arrow keys, tabbing, or other indicated keyboard shortcuts.',
+      },
+      {
+        label: 'Extra: Results can be exported and/or shared',
+        explanation: 'Users can export results (e.g., CSV, JSON, XML) or share (or save) a stable link to results.',
+      },
+    ],
+    explanation: 'Please check all the features that apply to your search results presentation and relevance.',
+      nextQuestionId: 9,
+  },
+  {
+    id: 9,
+    text: 'Search Formulation, Filtering and Facets',
+    type: 'checkbox',
+    options: [
+      {
+        label: 'Keyword search',
+        explanation: 'Basic search functionality using keywords.',
+      },
+      {
+        label: 'Exact phrase search (e.g., "The Matrix")',
+        explanation: 'Ability to search for an exact phrase or sequence of words.',
+      },
+      {
+        label: 'Synonym search (e.g., "drink" and "beverage")',
+        explanation: 'Search includes synonyms of the entered terms.',
+      },
+      {
+        label: 'Utilizes stemming for broader result matching (e.g., "running" and "runner")',
+        explanation: 'Search engine recognizes word variations based on common roots.',
+      },
+      {
+        label: 'Allows ordering of search results (e.g., most recent, most relevant, low price, high price, top-rated)',
+        explanation: 'Users can sort search results based on various criteria.',
+      },
+      {
+        label: 'Provides faceted navigation (e.g., by date, category, location, price, rating, reviews, etc.)',
+        explanation: 'Offers filters to narrow down search results without requiring a full page reload.',
+      },
+      {
+        label: 'Offers personalized results based on user history or behavior',
+        explanation: 'Search results are tailored to individual users based on their past interactions or preferences.',
+      },
+    ],
+    explanation: 'Please check all the features that apply to your search formulation, filtering, and facets.',
+    nextQuestionId: 11,
+  },
+  {
+    id: 10,
+    text: 'Merchandising and Product Discovery',
+    type: 'checkbox',
+    options: [
+      {
+        label: 'Basic product categorization and tagging',
+        explanation: 'Products are organized into categories and tagged with relevant attributes for easier discovery.',
+      },
+      {
+        label: 'Advanced product recommendations and personalization',
+        explanation: 'System provides tailored product suggestions based on user behavior, preferences, or similar items.',
+      },
+      {
+        label: 'Dynamic pricing integration',
+        explanation: 'Prices can be adjusted in real-time based on various factors like demand, inventory, or competitor pricing.',
+      },
+      {
+        label: 'Visual search capabilities',
+        explanation: 'Users can search for products using images or visual attributes rather than just text.',
+      },
+    ],
+    explanation: 'Please check all the features that apply to your merchandising and product discovery capabilities.',
     nextQuestionId: null, // This is the last question.
+  },
+  {
+    id: 11,
+    text: 'Search Analytics and Feedback',
+    type: 'checkbox',
+    options: [
+      {
+        label: 'Tracks top search terms and zero-result queries',
+        explanation: 'System monitors and records the most common search terms and queries that yield no results.',
+      },
+      {
+        label: 'Uses analytics to guide content and search optimization',
+        explanation: 'Insights from search data and user interactions are used to improve content strategy and search functionality.',
+      },
+      {
+        label: 'Regularly incorporates user feedback into search system improvements',
+        explanation: 'Explicit user feedback—ratings and written-form responses—is systematically collected and used to enhance the search experience.',
+      },
+      {
+        label: 'Provides dashboards or tools for real-time performance tracking',
+        explanation: 'Offers visual interfaces for monitoring search performance metrics in real-time.',
+      },
+    ],
+    explanation: 'Please check all the features that apply to your search analytics and feedback processes.',
+    nextQuestionId: null,
+  },
+  {
+    id: 12,
+    text: 'Benchmarking and Continuous Improvement',
+    type: 'checkbox',
+    options: [
+      {
+        label: 'Conducts manual tracking of basic performance metrics',
+        explanation: 'Regularly monitors fundamental search performance indicators through manual processes.',
+      },
+      {
+        label: 'Uses structured benchmarking with predefined query sets',
+        explanation: 'Employs a set of standardized queries to consistently evaluate search performance over time.',
+      },
+      {
+        label: 'Implements automated performance benchmarking',
+        explanation: 'Utilizes automated tools or scripts to regularly assess and report on search performance.',
+      },
+      {
+        label: 'Utilizes advanced analytics and A/B testing for continuous refinement',
+        explanation: 'Employs sophisticated data analysis and experimental design to iteratively improve search functionality.',
+      },
+    ],
+    explanation: 'Please check all the features that apply to your benchmarking and continuous improvement processes.',
+    nextQuestionId: null,
   },
 ];
 ---
@@ -62,58 +309,75 @@ const questions = [
 <Layout metadata={metadata}>
   <div class="py-12 md:py-20">
     <HeroText
-      title="Trieve Self-Assessment"
+      title="Trieve Self-Assessment for Search"
       subtitle="<p class='mt-4'>Conduct this self-assessment to start your <a href='/audit' class='underline'>Trieve Audit and Impact Proof</a>.</p>"
       callToAction={{
-        text: 'Start Self-Assessment',
+        text: 'Start Self-Assessment for Search',
         href: '#',
         id: 'openModal',
         class: 'mt-8',
       }}
     />
   </div>
-
+  <div id="finalResults" class="py-12 md:py-20 hidden">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <h2 class="text-4xl font-bold text-center mb-8">Your Self-Assessment Responses</h2>
+      <p>You can review you answers, edit them, and add comments.</p>
+      <p>When complete, you share your responses with the team at Trieve to start your <a href='/audit' class='underline'>Trieve Audit and Impact Proof</a>.</p>
+      <div class="mt-8">
+        <form id="submitForm" class="space-y-4">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
+            <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Enter your email">
+          </div>
+          <button type="submit" class="w-full px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors">
+            Submit Self-Assessment
+          </button>
+        </form>
+      </div>
+      <div id="finalResultsContent" class="space-y-6"></div>
+    </div>
+  </div>
   <!-- Modal -->
   <div
     id="assessmentModal"
-    class="fixed inset-0 bg-gray-600 dark:bg-gray-800 bg-opacity-50 dark:bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center p-8"
-    style="min-height: 100vh; min-width: 100vw;"
+    class="fixed inset-0 bg-gray-600 dark:bg-gray-800 bg-opacity-50 dark:bg-opacity-50 overflow-y-auto h-full w-full hidden z-50"
   >
-    <div
-      class="relative mx-auto p-8 border w-full max-w-md md:w-[90%] max-w-5xl shadow-lg rounded-lg bg-white dark:bg-gray-900"
-    >
-      <button
-        id="closeModalBtn"
-        class="absolute top-4 right-4 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div
+        class="inline-block align-bottom bg-white dark:bg-gray-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-headline"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-      <div id="modalContent" class="space-y-6 p-6 w-full">
-        <h3 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Self-Assessment</h3>
-        <div id="questionContainer" class="mb-6"></div>
-        <div class="flex justify-between items-center">
-          <button
-            id="prevBtn"
-            class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600"
-            >Previous</button
-          >
+        <div class="bg-white dark:bg-gray-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+              <h3 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white" id="modal-headline">
+                Self-Assessment
+              </h3>
+              <div id="questionContainer" class="mb-6 max-h-[60vh] overflow-y-auto"></div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
           <button
             id="nextBtn"
-            class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600"
-            >Next</button
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
           >
+            Next
+          </button>
+          <button
+            id="prevBtn"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          >
+            Previous
+          </button>
         </div>
-      </div>
-      <div id="resultsContainer" class="hidden space-y-6 p-6 w-full">
-        <h3 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Your Assessment Results</h3>
-        <div id="assessmentResults" class="space-y-4"></div>
-        <button
-          id="finishBtn"
-          class="mt-8 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors w-full"
-          >Finish</button
-        >
       </div>
     </div>
   </div>
@@ -152,17 +416,17 @@ const questions = [
     const questionContainer = document.getElementById('questionContainer');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    const modalContent = document.getElementById('modalContent');
-    const resultsContainer = document.getElementById('resultsContainer');
-    const assessmentResults = document.getElementById('assessmentResults');
-    const finishBtn = document.getElementById('finishBtn');
     const confirmationModal = document.getElementById('confirmationModal');
     const cancelExitBtn = document.getElementById('cancelExit');
     const confirmExitBtn = document.getElementById('confirmExit');
+    const finalResults = document.getElementById('finalResults');
+    const finalResultsContent = document.getElementById('finalResultsContent');
 
     function openModal() {
       modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden'; // Prevent body scrolling
       showQuestion();
+      positionModal();
     }
 
     function showConfirmationModal() {
@@ -175,40 +439,67 @@ const questions = [
 
     function closeModal() {
       modal.classList.add('hidden');
+      document.body.style.overflow = ''; // Re-enable body scrolling
       currentQuestion = questions.find((q) => q.id === 1);
-      modalContent.classList.remove('hidden');
-      resultsContainer.classList.add('hidden');
     }
 
-    openModalBtn.onclick = openModal;
-    closeModalBtn.onclick = showConfirmationModal;
-    cancelExitBtn.onclick = hideConfirmationModal;
-    confirmExitBtn.onclick = () => {
+    function positionModal() {
+      const modalContent = modal.querySelector('.relative');
+      const windowHeight = window.innerHeight;
+      const modalHeight = modalContent.offsetHeight;
+      
+      if (modalHeight > windowHeight) {
+        modalContent.style.marginTop = '2rem';
+        modalContent.style.marginBottom = '2rem';
+      } else {
+        modalContent.style.marginTop = '';
+        modalContent.style.marginBottom = '';
+      }
+    }
+
+    // Add event listener for window resize
+    window.addEventListener('resize', positionModal);
+
+    if (openModalBtn) openModalBtn.onclick = openModal;
+    if (closeModalBtn) closeModalBtn.onclick = showConfirmationModal;
+    if (cancelExitBtn) cancelExitBtn.onclick = hideConfirmationModal;
+    if (confirmExitBtn) confirmExitBtn.onclick = () => {
       hideConfirmationModal();
       closeModal();
     };
-    finishBtn.onclick = closeModal;
-
-    // Add event listener for the Escape key
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
-        showConfirmationModal();
-      }
-    });
-
-    prevBtn.onclick = () => {
-      if (currentQuestion.id > 1) {
-        currentQuestion = questions.find((q) => q.id === currentQuestion.id - 1);
-        showQuestion();
-      }
-    };
-
-    nextBtn.onclick = () => {
+    if (nextBtn) nextBtn.onclick = () => {
       const answer = getAnswer();
+      
+      // Update the answer
       answers[currentQuestion.id] = answer;
 
-      if (currentQuestion.nextQuestionId) {
-        currentQuestion = questions.find((q) => q.id === currentQuestion.nextQuestionId);
+      // If we're editing (final results are visible), return to results view
+      if (finalResults.classList.contains('hidden') === false) {
+        closeModal();
+        showFinalResults();
+        return;
+      }
+
+      if (currentQuestion.nextQuestionId === null) {
+        showResults();
+        return;
+      }
+
+      // Check if the first question is answered
+      if (currentQuestion.id === 1 && !answer) {
+        alert('Please answer the first question to proceed.');
+        return;
+      }
+
+      let nextQuestionId;
+      if (typeof currentQuestion.nextQuestionId === 'object') {
+        nextQuestionId = currentQuestion.nextQuestionId[answer];
+      } else {
+        nextQuestionId = currentQuestion.nextQuestionId;
+      }
+
+      if (nextQuestionId) {
+        currentQuestion = questions.find((q) => q.id === nextQuestionId);
         showQuestion();
       } else {
         showResults();
@@ -219,6 +510,10 @@ const questions = [
       if (currentQuestion.type === 'multiple-choice') {
         const selectedOption = document.querySelector('input[name="question"]:checked');
         return selectedOption ? selectedOption.value : null;
+      } else if (currentQuestion.type === 'checkbox') {
+        const selectedOptions = Array.from(document.querySelectorAll('input[name="question"]:checked'))
+          .map(input => input.value);
+        return selectedOptions.length > 0 ? selectedOptions : null;
       } else {
         return document.querySelector('textarea').value;
       }
@@ -245,11 +540,30 @@ const questions = [
       if (question.type === 'multiple-choice') {
         questionHTML += '<div class="space-y-2">';
         question.options.forEach((option) => {
+          const isChecked = answers[question.id] === option ? 'checked' : '';
           questionHTML += `
             <label class="flex items-center">
-              <input type="radio" name="question" value="${option}" class="mr-2">
+              <input type="radio" name="question" value="${option}" class="mr-2" ${isChecked}>
               <span class="text-gray-800 dark:text-gray-200">${option}</span>
             </label>
+          `;
+        });
+        questionHTML += '</div>';
+      } else if (question.type === 'checkbox') {
+        questionHTML += '<div class="space-y-4">';
+        question.options.forEach((option) => {
+          const optionValue = typeof option === 'string' ? option : option.label;
+          const isChecked = answers[question.id] && answers[question.id].includes(optionValue) ? 'checked' : '';
+          questionHTML += `
+            <div>
+              <label class="flex items-center mb-2">
+                <input type="checkbox" name="question" value="${optionValue}" class="mr-2" ${isChecked}>
+                <span class="text-gray-800 dark:text-gray-200">${optionValue}</span>
+              </label>
+              ${typeof option !== 'string' && option.explanation ? `
+                <p class="text-sm text-gray-600 dark:text-gray-400 ml-6">${option.explanation}</p>
+              ` : ''}
+            </div>
           `;
         });
         questionHTML += '</div>';
@@ -259,26 +573,127 @@ const questions = [
         `;
       }
 
+      if (question.bottomExplanation) {
+        questionHTML += `
+          <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">${question.bottomExplanation}</p>
+        `;
+      }
+
+      // Add the "Return to Results" button if we're editing an answer
+      if (finalResults.classList.contains('hidden') === false) {
+        questionHTML += `
+          <div class="mt-6">
+            <button id="returnToResultsBtn" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+              Return to Results
+            </button>
+          </div>
+        `;
+      }
+
       questionContainer.innerHTML = questionHTML;
 
+      // Add event listener for the "Return to Results" button
+      const returnToResultsBtn = document.getElementById('returnToResultsBtn');
+      if (returnToResultsBtn) {
+        returnToResultsBtn.onclick = () => {
+          closeModal();
+          showFinalResults();
+        };
+      }
+
       prevBtn.disabled = currentQuestion.id === 1;
-      nextBtn.textContent = currentQuestion.nextQuestionId ? 'Next' : 'Finish';
+      nextBtn.textContent = currentQuestion.nextQuestionId !== null ? 'Next' : 'Finish';
+
+      // Scroll to the top of the question container
+      questionContainer.scrollTop = 0;
     }
 
     function showResults() {
-      modalContent.classList.add('hidden');
-      resultsContainer.classList.remove('hidden');
+      showFinalResults();
+      closeModal();
+      finalResults.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showFinalResults() {
+      finalResults.classList.remove('hidden');
       let resultsHTML = '<div class="space-y-6">';
+      let allQuestionsAnswered = true;
+
       for (const question of questions) {
+        const answer = answers[question.id] || 'No answer provided';
+        if (answer === 'No answer provided') {
+          allQuestionsAnswered = false;
+        }
         resultsHTML += `
           <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
             <p class="font-bold text-lg mb-2 text-gray-800 dark:text-gray-200">${question.text}</p>
-            <p class="text-gray-600 dark:text-gray-400">${answers[question.id] || 'No answer provided'}</p>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">${Array.isArray(answer) ? answer.join(', ') : answer}</p>
+            ${question.comment ? `
+              <div class="mb-4 p-3 bg-white dark:bg-gray-700 rounded-lg">
+                <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">Comment:</p>
+                <p class="text-gray-600 dark:text-gray-400">${question.comment}</p>
+              </div>
+            ` : ''}
+            <div class="flex space-x-4">
+              <button onclick="editAnswer(${question.id})" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">Edit Answer</button>
+              <button onclick="toggleComment(${question.id})" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
+                ${question.comment ? 'Edit Comment' : 'Add Comment'}
+              </button>
+            </div>
+            <div id="comment-${question.id}" class="mt-4 hidden">
+              <textarea id="comment-text-${question.id}" class="w-full p-2 border rounded" rows="3">${question.comment || ''}</textarea>
+              <button onclick="saveComment(${question.id})" class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">Save Comment</button>
+            </div>
           </div>
         `;
       }
       resultsHTML += '</div>';
-      assessmentResults.innerHTML = resultsHTML;
+      finalResultsContent.innerHTML = resultsHTML;
+
+      if (!allQuestionsAnswered) {
+        finalResultsContent.innerHTML += `
+          <p class="text-red-500 mt-4">Please note: Some questions were left unanswered.</p>
+        `;
+      }
     }
+
+    function editAnswer(questionId) {
+      currentQuestion = questions.find(q => q.id === questionId);
+      showQuestion();
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      positionModal();
+    }
+
+    function toggleComment(questionId) {
+      const commentDiv = document.getElementById(`comment-${questionId}`);
+      commentDiv.classList.toggle('hidden');
+    }
+
+    function saveComment(questionId) {
+      const commentText = document.getElementById(`comment-text-${questionId}`).value;
+      const question = questions.find(q => q.id === questionId);
+      question.comment = commentText;
+      showFinalResults(); // Refresh the results view
+    }
+
+    // Make these functions globally accessible
+    window.editAnswer = editAnswer;
+    window.toggleComment = toggleComment;
+    window.saveComment = saveComment;
+
+    // Add event listener for the Escape key
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+        showConfirmationModal();
+      }
+    });
+
+    if (prevBtn) prevBtn.onclick = () => {
+      if (currentQuestion.id > 1) {
+        currentQuestion = questions.find((q) => q.id === currentQuestion.id - 1);
+        showQuestion();
+      }
+    };
   </script>
 </Layout>
