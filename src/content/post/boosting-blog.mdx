@@ -18,12 +18,14 @@ import TextBoxLearnMore from '../../components/common/TextBoxLearnMore.astro';
 import TextBox from '../../components/common/TextBox.astro';
 
 # Boosting in Trieve
+
 One of Trieve's most underlooked functionalities is boosting. It's one of the many tools search engineers and stakeholders use to improve results. We've picked up where traditional search systems leave off with additional thought about this increasingly demanding generation of users and businesses.
 
 This is not to be confused with dynamically promoting results by attributes like popularity, recency, membership in collections, or other types of tags typically found in metadata. You can do this with Trieve too.
 
 ## What this looks like in practice
-Let's say I am Martin Shkreli and I'm doing a stream. A viewer has asked me to analyze the stock, $YEXT. I don't know anything about it, but I download the 10-K and other documents to start feeling it out. I realize quickly that I need to know about their **growth plans**.
+
+For the sake of example let's say that I'm trying to analyze the company behind $YEXT. I don't know anything about it, but I download the 10-K and other documents to start feeling it out. I realize quickly that I need to know about their **growth plans**.
 
 Good search should make this type of analysis easier. For someone that knows what they're looking for, search is a much better tool than RAG. Quality search is sharpened steel in the hands of a master. 
  
@@ -38,6 +40,7 @@ This tells me nothing about their growth plans! How do we fix this?
 </TextBoxLearnMore>
 
 ## How do you fix this cherrypicked example?
+
 Let's explode the problem out with this diagram. We have our query, *growth plans*, and chunks getting returned by decreasing score. 
 
 **Chunk #4** is the chunk I need to be returned as the most relevant chunk. Fixing this not only fixes search for this query, but also improves my retrieval for RAG and recommendations by the way!
@@ -67,6 +70,7 @@ And now we've won. **Chunk #4 is now chunk #1 for query growth plan**. We've got
 ![returning-desired-chunk](https://trieve.b-cdn.net/blog/boosting-in-trieve/returning-desired-chunk.png)
 
 ## Why should I care about boosting?
+
 Boosting can be useful in various business scenarios where you want to fine-tune search results.
 
 #### Ecommerce
@@ -95,9 +99,8 @@ Boosting can be useful in various business scenarios where you want to fine-tune
 
 And so on.
 
-## Boosting is not a hammer
-As we've seen, boosting is an essential tool for tuning relevance. However, it's important to consider other tools like chink
 ## Why Trieve boosting stands out
+
 It must be said that Trieve is built developer-first. What takes a few more fields and many more indices with Solr-based solutions is done within a single Trieve API call. The *ergonomics* are superior.
 
 ![fulltext-boosting-api-reference](https://trieve.b-cdn.net/blog/boosting-in-trieve/fulltext-boosting-api-reference.png)
