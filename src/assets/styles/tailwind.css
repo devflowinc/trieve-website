@@ -100,3 +100,7 @@
 .usage-tabs pre.shiki {
   @apply p-4 pr-10 text-sm h-full whitespace-break-spaces;
 }
+
+#trieve-search-modal {
+  all: initial;
+}
