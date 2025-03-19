@@ -1,7 +1,7 @@
 ---
 publishDate: 2025-03-04T13:45:00.000Z
 author: Nicholas Khami
-title: Build a Hotel Voice Assistant with Trieve + Vapi
+title: Build a Hotel Voice Agent with Trieve + Vapi
 excerpt: >-
   Step by step guide including how to create a datset, perform a web crawl of a
   hotel's site, and connect the dataset to Vapi as a knowledge-base quickly.
@@ -20,6 +20,15 @@ import Info from '~/components/common/Info.astro';
 
 If you are a more API focused user and just interested in the HTTP requests you would use to build this system, then please reference the included cURL requests throughout the blog.
 
+<div class="max-w-full lg:max-w-[900px] mx-auto mb-6 sm:rounded-md bg-gray-400 dark:bg-slate-700 aspect-auto">
+  <div style="padding:56.25% 0 0 0;position:relative;">
+  <iframe src="https://player.vimeo.com/video/1067180490?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Build a Hotel Voice Assistant Using Trieve and Vapi">
+</iframe>
+</div>
+  <script src="https://player.vimeo.com/api/player.js">
+</script>
+</div>
+
 # Hotel Voice Agent Requirements
 
 We are going to be building a voice assistant for [Hotel Spero in San Francisco](https://www.ihg.com/vignettecollection/hotels/us/en/san-francisco/sfosh/hoteldetail).
@@ -30,9 +39,9 @@ We are going to be building a voice assistant for [Hotel Spero in San Francisco]
 
 # Trieve Portion
 
-<Info>
+<info>
   Creating a Trieve account is a pre-requisite to this tutorial. Navigate to <a href="https://trieve.ai">trieve.ai</a> and click "Sign Up" to create your account and access the dashboard. Alternatively, navigate directly to <a href="https://dashboard.trieve.ai">dashboard.trieve.ai</a>.
-</Info>
+</info>
 
 ## Step 1: Create a Trieve Dataset
 
@@ -85,9 +94,9 @@ curl 'https://api.trieve.ai/api/crawl' \
 
 Now that we have all of the Hotel's context pulled into to a `Dataset`, we will need to create a Voice assistant with Vapi and connect it to the Trieve `Dataset` for Hotel Spiro as a Knowledge Base.
 
-<Info>
+<info>
   Creating a Vapi account is a pre-requisite to this tutorial. Navigate to <a href="https://vapi.ai">vapi.ai</a> and click "Sign Up" to create your account and access the dashboard. Alternatively, navigate directly to <a href="https://dashboard.vapi.ai">dashboard.vapi.ai</a>.
-</Info>
+</info>
 
 ## 1\. Add your Trieve API Key as a Vapi Provider Credential
 
