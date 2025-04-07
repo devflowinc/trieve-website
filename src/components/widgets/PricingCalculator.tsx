@@ -51,7 +51,7 @@ const defaultUsage: Usage = {
   pagesCrawled: 10,
   writesPerMo: 10_000,
   analyticsEvents: 1_000_000,
-  ocrPages: 100,
+  ocrPages: 10,
   componentLoads: 1_000,
   datasets: 2,
   users: 5,
@@ -100,7 +100,7 @@ const calculateUsageCost = (usage: Usage, assumptions: Assumptions) => {
     ingestCostGb: Math.max(ingestionStorageGB - 1, 0) * 2,
     analyticsCost: Math.max(0, usage.analyticsEvents - 1_000_000) * 0.0001,
     fileStorageCost: Math.max(0, usage.fileStoredGb - 10) * 0.046,
-    ocrCost: Math.max(0, (usage.ocrPages * assumptions.tokensPerPage) - 100) * 0.01,
+    ocrCost: Math.max(0, (usage.ocrPages - 10)) * 0.01,
     componentCost: Math.max(0, usage.componentLoads - 1_000) * 0.01,
     userCost: Math.max(0, usage.users - 5) * 5,
     total: 0
@@ -120,7 +120,7 @@ const formatCurrency = (amount: number) => {
 };
 
 
-const PricingCalculatorTwo = () => {
+const PricingCalculator = () => {
 
   const pullUsageFromPath = () => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -292,9 +292,11 @@ const PricingCalculatorTwo = () => {
           <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
         </svg>
         <h3 id="trieve-cloud-pricing">
-          Pricing calculator
+          Trieve Cloud Pricing
         </h3>
-        <p className="text-sm font-thin pl-2 self-end">Trieve Cloud Pricing</p>
+        <p className="text-sm font-thin pl-2 self-end">
+          Calculate your usage
+        </p>
       </div>
 
       {/* Main tab navigation */}
@@ -386,12 +388,12 @@ const PricingCalculatorTwo = () => {
                 <div className="mb-6">
                   <div className='flex space-x-2 mb-4 items-end'>
                     <h3 className="text-lg font-medium">Writes / month</h3>
-                    <p className='text-sm'>First 10,000 writes are free!</p>
+                    <p className='text-sm'>First 100,000 writes are free!</p>
                   </div>
                   <PriceSlider
-                    min={10_000}
-                    max={100_000_000}
-                    markers={[10_000, 100_000, 1_000_000, 10_000000, 10_0000000]}
+                    min={100_000}
+                    max={10_000000}
+                    markers={[100_000, 100_000, 200_000, 500_000, 1_000_000, 3_000_000, 5_000_000, 10_000000]}
                     defaultValue={usage.writesPerMo}
                     beforeValueText=""
                     afterValueText="writes"
@@ -431,9 +433,9 @@ const PricingCalculatorTwo = () => {
                   <div>
                     <div className="relative">
                       <PriceSlider
-                        min={100}
+                        min={10}
                         max={100000}
-                        markers={[100, 1000, 10000, 100000, 1000000, 10000000]}
+                        markers={[10, 1000, 10000, 100000, 1000000]}
                         defaultValue={usage.ocrPages}
                         beforeValueText=""
                         afterValueText="pages"
@@ -512,13 +514,13 @@ const PricingCalculatorTwo = () => {
                 <div>
                   <div className='flex space-x-2 mb-4 items-end'>
                     <h3 className="text-lg font-medium">Analytics</h3>
-                    <p className='text-sm'>First 100k events free!</p>
+                    <p className='text-sm'>First 1M events free!</p>
                   </div>
 
                   <div>
                     <div className="relative">
                       <PriceSlider
-                        min={10_00_00}
+                        min={1_000_000}
                         max={100_000_000_000}
                         markers={[100_000, 1_000_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000, 10_000_000_000, 100_000_000_000]}
                         defaultValue={usage.analyticsEvents}
@@ -615,4 +617,4 @@ const PricingCalculatorTwo = () => {
   );
 };
 
-export default PricingCalculatorTwo;
+export default PricingCalculator;
